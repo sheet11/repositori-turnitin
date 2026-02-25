@@ -11,10 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hasil_turnitin', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+    Schema::create('hasil_turnitin', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('dokumen_id')->constrained('dokumen');
+        $table->decimal('similarity_index',5,2);
+        $table->string('file_laporan');
+        $table->timestamp('tanggal_cek');
+        $table->foreignId('operator_id')->constrained('users');
+        $table->timestamps();
+    });
     }
 
     /**

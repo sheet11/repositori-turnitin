@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role_id')->constrained('roles');
+            $table->string('role_id')->default('3')->constrained('roles');
             $table->enum('status',['Aktif','Nonaktif'])->default('Aktif');
             $table->rememberToken();
             $table->timestamps();
