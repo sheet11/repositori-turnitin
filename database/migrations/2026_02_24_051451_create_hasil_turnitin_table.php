@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('hasil_turnitin', function (Blueprint $table) {
+    Schema::create('hasil_turnitins', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('dokumen_id')->constrained('dokumen');
+        $table->foreignId('dokumen_id')->constrained('dokumens');
         $table->decimal('similarity_index',5,2);
         $table->string('file_laporan');
         $table->timestamp('tanggal_cek');

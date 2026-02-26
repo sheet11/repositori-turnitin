@@ -10,19 +10,19 @@
 <div class="flex min-h-screen">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-blue-900 text-white p-5">
+    <aside class="w-64 bg-blue-900 text-black p-5 min-h-screen">
         <h2 class="text-xl font-bold mb-8">Turnitin Repo</h2>
 
         <nav class="space-y-3">
             <a href="{{ route('dashboard') }}" class="block hover:bg-blue-700 p-2 rounded">Dashboard</a>
-            <a href="{{ route('dokumen.index') }}" class="block hover:bg-blue-700 p-2 rounded">Data Dokumen</a>
+            <a href="{{ route('dokumen.dashboard') }}" class="block hover:bg-blue-700 p-2 rounded">Data Dokumen</a>
 
-            @if(auth()->user()->role->nama_role == 'Admin')
+            @if(auth()->user()->role_id == '1')
                 <a href="#" class="block hover:bg-blue-700 p-2 rounded">Manajemen User</a>
                 <a href="#" class="block hover:bg-blue-700 p-2 rounded">Statistik</a>
             @endif
 
-            @if(auth()->user()->role->nama_role == 'Operator')
+            @if(auth()->user()->role_id == '2')
                 <a href="#" class="block hover:bg-blue-700 p-2 rounded">Verifikasi Dokumen</a>
             @endif
         </nav>

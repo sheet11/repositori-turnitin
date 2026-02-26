@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mahasiswa', function (Blueprint $table) {
+        Schema::create('mahasiswas', function (Blueprint $table) {
         $table->string('nim')->primary();
         $table->string('nama');
         $table->string('password');
-        $table->foreignId('program_studi_id')->constrained('program_studi');
+        $table->foreignId('program_studi_id')->constrained('program_studis');
         $table->year('tahun_masuk');
         $table->timestamps();
     });

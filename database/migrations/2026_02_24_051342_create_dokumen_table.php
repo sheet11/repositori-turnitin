@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('dokumen', function (Blueprint $table) {
+    Schema::create('dokumens', function (Blueprint $table) {
         $table->id();
         $table->string('judul');
         $table->enum('jenis_dokumen',['Skripsi','Jurnal','Proposal','KTI']);

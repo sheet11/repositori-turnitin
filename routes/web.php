@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DokumenController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,6 +21,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/admin', [AdminController::class, 'index'])
         ->name('admin.dashboard');
+    Route::get('/dokumen', [DokumenController::class, 'index'])
+        ->name('dokumen.dashboard');
 });
 
 require __DIR__.'/auth.php';
