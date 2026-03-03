@@ -21,8 +21,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/admin', [AdminController::class, 'index'])
         ->name('admin.dashboard');
-    Route::get('/dokumen', [DokumenController::class, 'index'])
-        ->name('dokumen.dashboard');
+    // resourceful routes for dokumen; index will serve as the dashboard listing
+    Route::resource('dokumen', DokumenController::class)
+        ->only(['index','create','store','show','edit','update','destroy']);
+
+    // if you still need a named shortcut for the dashboard you can use:
+    // Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen.dashboard');
 });
 
 require __DIR__.'/auth.php';

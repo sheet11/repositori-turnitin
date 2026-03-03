@@ -18,9 +18,22 @@ class Dokumen extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'nama_dokumen',
-        'file_path',
-        'status'
+        'judul',
+        'jenis_dokumen',
+        'nim',
+        'file_asli',
+        'bukti_bayar',
+        'tanggal_upload',
+        'status',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected $casts = [
+        'tanggal_upload' => 'datetime',
     ];
 
     /**
