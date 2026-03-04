@@ -22,7 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])
         ->name('admin.dashboard');
     // resourceful routes for dokumen; index will serve as the dashboard listing
+    // override parameter name to avoid Laravel interpreting 'dokumen' singular as 'dokuman'
     Route::resource('dokumen', DokumenController::class)
+        ->parameters(['dokumen' => 'dokumen'])
         ->only(['index','create','store','show','edit','update','destroy']);
 
     // if you still need a named shortcut for the dashboard you can use:

@@ -47,4 +47,8 @@ class Dokumen extends Model
      *
      * @return array<string, string>
      */
+    public function hasilTurnitin()
+    {
+        return $this->hasOne(HasilTurnitin::class);
+    }
 }

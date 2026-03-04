@@ -18,7 +18,7 @@
 
             <nav class="space-y-3column">
                 <a href="{{ route('dashboard') }}" class="block hover:bg-blue-700 p-2 roundedlack">Dashboard</a>
-                <a href="{{ route('dokumen.dashboard') }}" class="block hover:bg-blue-700 p-2 rounded">Data Dokumen</a>
+                <a href="{{ route('dokumen.index') }}" class="block hover:bg-blue-700 p-2 rounded">Data Dokumen</a>
 
                 @if (auth()->user()->role_id == '1')
                 <a href="#" class="block hover:bg-blue-700 p-2 rounded">Manajemen User</a>

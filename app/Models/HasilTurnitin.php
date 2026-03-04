@@ -34,4 +34,8 @@ class HasilTurnitin extends Model
      *
      * @return array<string, string>
      */
+    public function dokumen()
+    {
+        return $this->belongsTo(Dokumen::class);
+    }
 }
