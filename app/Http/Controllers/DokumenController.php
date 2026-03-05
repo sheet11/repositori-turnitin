@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Dokumen;
 use App\Models\HasilTurnitin;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class DokumenController extends Controller
 {
@@ -15,11 +17,21 @@ class DokumenController extends Controller
     public function index(Request $request): View
     {
         $search = $request->query('search');
+        $user = Auth::user();
 
+        // start with base query
         $query = Dokumen::query();
+
+        // mahasiswa only sees their own dokumen
+        if ($user && optional($user->role)->nama_role === 'Mahasiswa') {
+            $query->where('user_id', $user->id);
+        }
+
         if ($search) {
-            $query->where('judul', 'like', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
                   ->orWhere('nim', 'like', "%{$search}%");
+            });
         }
 
         // you can change to paginate() if you need pagination in the view
@@ -56,6 +68,8 @@ class DokumenController extends Controller
         if ($request->hasFile('bukti_bayar')) {
             $data['bukti_bayar'] = $request->file('bukti_bayar')->store('bukti');
         }
+
+        $data['user_id'] = Auth::id();
 
         Dokumen::create($data);
 
@@ -103,6 +117,9 @@ class DokumenController extends Controller
     public function destroy(Dokumen $dokumen)
     {
         $dokumen->delete();
+        if ($dokumen->bukti_bayar) {
+        Storage::delete($dokumen->bukti_bayar);
+}
 
         return redirect()->route('dokumen.index')
                          ->with('success', 'Dokumen dihapus.');

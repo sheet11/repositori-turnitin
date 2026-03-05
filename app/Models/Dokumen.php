@@ -51,4 +51,9 @@ class Dokumen extends Model
     {
         return $this->hasOne(HasilTurnitin::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

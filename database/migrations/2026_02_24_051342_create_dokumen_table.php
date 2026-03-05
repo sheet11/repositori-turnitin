@@ -19,7 +19,7 @@ return new class extends Migration
         $table->string('file_asli');
         $table->string('bukti_bayar')->nullable();
         $table->timestamp('tanggal_upload');
-        $table->enum('status',['Pending','Di Proses','Ditolak','Selesai'])->default('Pending');
+        $table->enum('status',['Pending','Diproses','Ditolak','Selesai'])->default('Pending');
         $table->timestamps();
     });
     }

@@ -3,8 +3,10 @@
 @section('content')
 
 <div class="d-flex justify-content-between align-items-center mb-6">
-    <h1 class="text-2xl font-bold">Dashboard Operator</h1>
-    {{-- operators don't need to add new documents --}}
+    <h1 class="text-2xl font-bold">Dashboard Mahasiswa</h1>
+    <a href="{{ route('dokumen.create') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Tambah Dokumen
+    </a>
 </div>
 
 @if(session('success'))
@@ -14,9 +16,10 @@
 </div>
 @endif
 
+{{-- reuse the dokumen table partial if desired, otherwise duplicate --}}
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Daftar Dokumen</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Dokumen Saya</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -67,18 +70,16 @@
                                 title="Lihat Detail">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            {{-- allow operator to change status quickly --}}
-                            <form action="{{ route('operator.updateStatus', $d->id) }}" method="POST" class="d-inline">
+                            <a href="{{ route('dokumen.edit', $d->id) }}" class="btn btn-sm btn-warning" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('dokumen.destroy', $d->id) }}" method="POST" style="display:inline;">
                                 @csrf
-                                @method('PATCH')
-                                <select name="status" onchange="this.form.submit()" class="form-select form-select-sm"
-                                    style="display:inline-block; width:auto;">
-                                    <option value="Pending" {{ $d->status=='Pending'?'selected':'' }}>Pending</option>
-                                    <option value="Di Proses" {{ $d->status=='Di Proses'?'selected':'' }}>Di Proses
-                                    </option>
-                                    <option value="Selesai" {{ $d->status=='Selesai'?'selected':'' }}>Selesai</option>
-                                    <option value="Ditolak" {{ $d->status=='Ditolak'?'selected':'' }}>Ditolak</option>
-                                </select>
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" title="Hapus"
+                                    onclick="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </form>
                         </td>
                     </tr>
