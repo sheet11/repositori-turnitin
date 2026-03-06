@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Mahasiswa;
 
 use Illuminate\Http\Request;
 use App\Models\Dokumen;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class MahasiswaController extends Controller
 {

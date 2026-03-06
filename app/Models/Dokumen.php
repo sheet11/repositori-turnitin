@@ -25,6 +25,7 @@ class Dokumen extends Model
         'bukti_bayar',
         'tanggal_upload',
         'status',
+        'user_id',
     ];
 
     /**

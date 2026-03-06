@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\MahasiswaController;
-use App\Http\Controllers\OperatorController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Mahasiswa\MahasiswaController;
+use App\Http\Controllers\Operator\OperatorController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\Admin\DokumenController;
+use App\Http\Controllers\DosenController;
+use App\Http\Controllers\HasilTurnitinController;
+use App\Http\Controllers\LogAktivitasController;
 
 
 
@@ -17,14 +20,15 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $user = Auth::user();
     if ($user) {
-        $roleName = optional($user->role)->nama_role;
-        switch ($roleName) {
-            case 'Admin':
+        switch ($user->role_id) {
+            case 1: // Admin
                 return redirect()->route('admin.dashboard');
-            case 'Operator':
+            case 2: // Operator
                 return redirect()->route('operator.dashboard');
-            case 'Mahasiswa':
+            case 3: // Mahasiswa
                 return redirect()->route('mahasiswa.dashboard');
+            case 4: // Dosen
+                return redirect()->route('dosen.index');
         }
     }
     return view('dashboard');
@@ -54,6 +58,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('dokumen', DokumenController::class)
         ->parameters(['dokumen' => 'dokumen'])
         ->only(['index','create','store','show','edit','update','destroy']);
+
+    // resourceful routes for new controllers
+    Route::resource('dosen', DosenController::class)
+        ->parameters(['dosen' => 'dosen']);
+    Route::resource('hasil-turnitin', HasilTurnitinController::class)
+        ->parameters(['hasil-turnitin' => 'hasilTurnitin']);
+    Route::resource('log-aktivitas', LogAktivitasController::class)
+        ->parameters(['log-aktivitas' => 'logAktivitas']);
 
     // if you still need a named shortcut for the dashboard you can use:
     // Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen.dashboard');

@@ -51,14 +51,14 @@
                         <td>
                             @if($d->status == 'Pending')
                             <span class="badge bg-warning text-dark">{{ $d->status }}</span>
-                            @elseif($d->status == 'Di Proses')
-                            <span class="badge bg-info">{{ $d->status }}</span>
+                            @elseif($d->status == 'Diproses')
+                            <span class="badge bg-info text-white">{{ $d->status }}</span>
                             @elseif($d->status == 'Selesai')
-                            <span class="badge bg-success">{{ $d->status }}</span>
+                            <span class="badge bg-success text-white">{{ $d->status }}</span>
                             @elseif($d->status == 'Ditolak')
-                            <span class="badge bg-danger">{{ $d->status }}</span>
+                            <span class="badge bg-danger text-white">{{ $d->status }}</span>
                             @else
-                            <span class="badge bg-secondary">{{ $d->status }}</span>
+                            <span class="badge bg-secondary text-white">{{ $d->status }}</span>
                             @endif
                         </td>
                         <td>{{ $d->created_at->format('d-m-Y') }}</td>
@@ -71,13 +71,17 @@
                             <form action="{{ route('operator.updateStatus', $d->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('PATCH')
-                                <select name="status" onchange="this.form.submit()" class="form-select form-select-sm"
-                                    style="display:inline-block; width:auto;">
-                                    <option value="Pending" {{ $d->status=='Pending'?'selected':'' }}>Pending</option>
-                                    <option value="Di Proses" {{ $d->status=='Di Proses'?'selected':'' }}>Di Proses
+                                <select name="status" onchange="this.form.submit()"
+                                    class="btn btn-primary dropdown-toggle">
+                                    <option class="dropdown-item" value="Pending" {{ $d->status=='Pending'?'selected':''
+                                        }}>Pending</option>
+                                    <option class="dropdown-item" value="Diproses" {{ $d->
+                                        status=='Diproses'?'selected':'' }}>Di Proses
                                     </option>
-                                    <option value="Selesai" {{ $d->status=='Selesai'?'selected':'' }}>Selesai</option>
-                                    <option value="Ditolak" {{ $d->status=='Ditolak'?'selected':'' }}>Ditolak</option>
+                                    <option class="dropdown-item" value="Selesai" {{ $d->status=='Selesai'?'selected':''
+                                        }}>Selesai</option>
+                                    <option class="dropdown-item" value="Ditolak" {{ $d->status=='Ditolak'?'selected':''
+                                        }}>Ditolak</option>
                                 </select>
                             </form>
                         </td>

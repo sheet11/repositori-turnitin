@@ -3,10 +3,7 @@
 @section('content')
 
 <div class="d-flex justify-content-between align-items-center mb-6">
-    <h1 class="text-2xl font-bold">Dashboard Mahasiswa</h1>
-    <a href="{{ route('dokumen.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus"></i> Tambah Dokumen
-    </a>
+    <h1 class="text-2xl font-bold">Dashboard Dosen</h1>
 </div>
 
 @if(session('success'))
@@ -19,7 +16,7 @@
 {{-- reuse the dokumen table partial if desired, otherwise duplicate --}}
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Daftar Dokumen Saya</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Dokumen Mahasiswa</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -49,7 +46,7 @@
                     @foreach($dokumen as $d)
                     <tr>
                         <td>{{ $d->judul }}</td>
-                        <td>{{ old('nim', $d->user->nim) }}</td>
+                        <td>{{ $d->nim }}</td>
                         <td>{{ $d->jenis_dokumen }}</td>
                         <td>
                             @if($d->status == 'Pending')
@@ -70,25 +67,12 @@
                                 title="Lihat Detail">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('dokumen.edit', $d->id) }}" class="btn btn-sm btn-warning" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <form action="{{ route('dokumen.destroy', $d->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" title="Hapus"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
                         </td>
                     </tr>
                     @endforeach
                     @else
                     <tr>
-                        <td colspan="6" class="text-center py-4 text-muted">
-                            <i class="fas fa-inbox"></i> Tidak ada dokumen yang tersedia.
-                        </td>
+                        <td colspan="6" class="text-center">Tidak ada dokumen ditemukan.</td>
                     </tr>
                     @endif
                 </tbody>
@@ -96,17 +80,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        $('#dokumenTable').DataTable({
-            pageLength: 10,
-            searching: true,
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json'
-            }
-        });
-    });
-</script>
 
 @endsection

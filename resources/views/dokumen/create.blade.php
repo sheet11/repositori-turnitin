@@ -51,13 +51,12 @@
                     @enderror
                 </div>
 
+                {{-- Tampilkan NIM dari user yang login --}}
                 <div class="mb-3">
                     <label for="nim" class="form-label">NIM <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control @error('nim') is-invalid @enderror" id="nim" name="nim"
-                        placeholder="Masukkan NIM" value="{{ old('nim') }}" required>
-                    @error('nim')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
+                    <input type="text" class="form-control" id="nim" name="nim" 
+                        value="{{ Auth::user()->mahasiswa->nim ?? '-' }}" disabled readonly>
+                    <small class="form-text text-muted">NIM diambil otomatis dari data profil Anda</small>
                 </div>
 
                 <div class="mb-3">

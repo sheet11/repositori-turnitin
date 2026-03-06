@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProgramStudi extends Model
 {
-    //
+    protected $fillable = [
+        'nama_prodi',
+    ];
 }

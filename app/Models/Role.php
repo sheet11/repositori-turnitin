@@ -32,4 +32,9 @@ class Role extends Authenticatable
      *
      * @return array<string, string>
      */
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

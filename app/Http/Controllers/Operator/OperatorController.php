@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Operator;
 
 use Illuminate\Http\Request;
 use App\Models\Dokumen;
 use Illuminate\View\View;
+use App\Http\Controllers\Controller;
 
 class OperatorController extends Controller
 {
@@ -34,7 +35,7 @@ class OperatorController extends Controller
     public function updateStatus(Request $request, Dokumen $dokumen)
     {
         $data = $request->validate([
-            'status' => 'required|in:Pending,Di Proses,Ditolak,Selesai',
+            'status' => 'required|in:Pending,Diproses,Ditolak,Selesai',
         ]);
 
         $dokumen->update($data);

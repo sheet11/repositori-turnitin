@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'role_id',
+        'mahasiswa_id',
         'password',
     ];
 
@@ -50,5 +51,15 @@ class User extends Authenticatable
     public function dokumens()
     {
         return $this->hasMany(Dokumen::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'user_id', 'id');
     }
 }
