@@ -54,7 +54,7 @@
                 {{-- Tampilkan NIM dari user yang login --}}
                 <div class="mb-3">
                     <label for="nim" class="form-label">NIM <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="nim" name="nim" 
+                    <input type="text" class="form-control" id="nim" name="nim"
                         value="{{ Auth::user()->mahasiswa->nim ?? '-' }}" disabled readonly>
                     <small class="form-text text-muted">NIM diambil otomatis dari data profil Anda</small>
                 </div>
