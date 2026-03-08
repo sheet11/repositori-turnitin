@@ -48,6 +48,25 @@ class User extends Authenticatable
         ];
     }
 
+    public function isAdmin()
+    {
+        return $this->role_id == 1;
+    }
+
+    public function isOperator()
+    {
+        return $this->role_id == 2;
+    }
+
+    public function isMahasiswa()
+    {
+        return $this->role_id == 3;
+    }
+
+    public function isDosen()
+    {
+        return $this->role_id == 4;
+    }
     public function dokumens()
     {
         return $this->hasMany(Dokumen::class);
@@ -60,6 +79,6 @@ class User extends Authenticatable
 
     public function mahasiswa()
     {
-        return $this->belongsTo(Mahasiswa::class, 'user_id', 'id');
+        return $this->hasOne(Mahasiswa::class, 'user_id');
     }
 }

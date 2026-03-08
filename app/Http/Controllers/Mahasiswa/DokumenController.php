@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Mahasiswa;
 
 use Illuminate\Http\Request;
 use App\Models\Dokumen;
-use App\Models\HasilTurnitin;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class DokumenController extends Controller
 {
@@ -28,16 +28,16 @@ class DokumenController extends Controller
         }
 
         if ($search) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('judul', 'like', "%{$search}%")
-                  ->orWhere('nim', 'like', "%{$search}%");
+                    ->orWhere('nim', 'like', "%{$search}%");
             });
         }
 
         // you can change to paginate() if you need pagination in the view
         $dokumen = $query->orderBy('created_at', 'desc')->get();
 
-        return view('dokumen.dashboard', compact('dokumen'));
+        return view('mahasiswa.dokumen.dashboard', compact('dokumen'));
     }
 
     /**
@@ -45,13 +45,13 @@ class DokumenController extends Controller
      */
     public function create(): View
     {
-        return view('dokumen.create');
+        return view('mahasiswa.dokumen.create');
     }
 
     /**
      * Store a newly created dokumen in storage.
      */
-    
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -74,8 +74,8 @@ class DokumenController extends Controller
 
         Dokumen::create($data);
 
-        return redirect()->route('dokumen.index')
-                         ->with('success', 'Dokumen berhasil ditambahkan.');
+        return redirect()->route('mahasiswa.dokumen.index')
+            ->with('success', 'Dokumen berhasil ditambahkan.');
     }
 
     /**
@@ -83,7 +83,7 @@ class DokumenController extends Controller
      */
     public function show(Dokumen $dokumen): View
     {
-        return view('dokumen.show', compact('dokumen'));
+        return view('mahasiswa.dokumen.show', compact('dokumen'));
     }
 
     /**
@@ -91,7 +91,7 @@ class DokumenController extends Controller
      */
     public function edit(Dokumen $dokumen): View
     {
-        return view('dokumen.edit', compact('dokumen'));
+        return view('mahasiswa.dokumen.edit', compact('dokumen'));
     }
 
     /**
@@ -108,8 +108,8 @@ class DokumenController extends Controller
 
         $dokumen->update($data);
 
-        return redirect()->route('dokumen.index')
-                         ->with('success', 'Data dokumen diperbarui.');
+        return redirect()->route('mahasiswa.dokumen.index')
+            ->with('success', 'Data dokumen diperbarui.');
     }
 
     /**
@@ -119,10 +119,10 @@ class DokumenController extends Controller
     {
         $dokumen->delete();
         if ($dokumen->bukti_bayar) {
-        Storage::delete($dokumen->bukti_bayar);
-}
+            Storage::delete($dokumen->bukti_bayar);
+        }
 
-        return redirect()->route('dokumen.index')
-                         ->with('success', 'Dokumen dihapus.');
+        return redirect()->route('mahasiswa.dokumen.index')
+            ->with('success', 'Dokumen dihapus.');
     }
 }

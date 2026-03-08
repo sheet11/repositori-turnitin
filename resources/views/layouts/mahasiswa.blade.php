@@ -103,22 +103,38 @@
             </div>
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('dokumen.index') }}">
-                    <i class="fas fa-fw fa-file-alt"></i>
-                    <span>Dokumen</span>
-                </a>
+                @php
+                    use App\Models\Dokumen;
+                    $cekDokumen = \App\Models\Dokumen::where('user_id', auth()->id())
+                        ->where('status', '!=', 'Selesai')
+                        ->count();
+                    $cekpending = \App\Models\Dokumen::where('user_id', auth()->id())
+                        ->where('status', 'Pending')
+                        ->count();
+                    $d = Dokumen::where('user_id', Auth::id())->latest()->first();
+                @endphp
+
+                @if ((auth()->user()->role_id == 3 || auth()->user()->role_id == 4) && $cekDokumen == 0)
+                    <a class="nav-link" href="{{ route('mahasiswa.dokumen.create') }}">
+                        <i class="fas fa-fw fa-file-alt"></i>
+                        <span>Pengajuan</span>
+                    </a>
+                @elseif ((auth()->user()->role_id == 3 || auth()->user()->role_id == 4) && $cekpending > 0)
+                    <a class="nav-link" href="{{ route('mahasiswa.dokumen.show', $d->id) }}">
+                        <i class="fas fa-fw fa-file-alt"></i>
+                        <span>Pengajuan</span>
+                    </a>
+                @endif
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('dokumen.index') }}">
+                <a class="nav-link" href="{{ route('mahasiswa.dokumen.index') }}">
                     <i class="fas fa-fw fa-file-invoice"></i>
                     <span>Riwayat Pengajuan</span></a>
             </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-            <li class="nav-item">
-                <a class="nav-link" href=""><i class="fas fa-fw fa-users"></i><span>Management User</span></a>
-            </li>
+
         </ul>
         <!-- End of Sidebar -->
 

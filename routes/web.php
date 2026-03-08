@@ -1,74 +1,134 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Mahasiswa\MahasiswaController;
-use App\Http\Controllers\Operator\OperatorController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DokumenController;
+use App\Http\Controllers\Mahasiswa\MahasiswaController;
+use App\Http\Controllers\Mahasiswa\DokumenController as MahasiswaDokumenController;
+use App\Http\Controllers\Operator\OperatorController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\HasilTurnitinController;
 use App\Http\Controllers\LogAktivitasController;
 
-
+/*
+|--------------------------------------------------------------------------
+| Landing Page
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Dashboard Redirect Berdasarkan Role
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/dashboard', function () {
     $user = Auth::user();
+
     if ($user) {
         switch ($user->role_id) {
-            case 1: // Admin
+            case 1:
                 return redirect()->route('admin.dashboard');
-            case 2: // Operator
+
+            case 2:
                 return redirect()->route('operator.dashboard');
-            case 3: // Mahasiswa
+
+            case 3:
                 return redirect()->route('mahasiswa.dashboard');
-            case 4: // Dosen
+
+            case 4:
                 return redirect()->route('dosen.index');
         }
     }
+
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    // dashboards separated by role
-    Route::get('/admin', [AdminController::class, 'index'])
-        ->name('admin.dashboard');
+/*
+|--------------------------------------------------------------------------
+| ADMIN
+|--------------------------------------------------------------------------
+*/
 
-    Route::get('/mahasiswa', [MahasiswaController::class, 'index'])
-        ->name('mahasiswa.dashboard');
+Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
-    Route::get('/operator', [OperatorController::class, 'index'])
-        ->name('operator.dashboard');
+    Route::resource('dokumen', DokumenController::class);
 
-    // operator helper route to change document status
-    Route::patch('/operator/dokumen/{dokumen}/status', [OperatorController::class, 'updateStatus'])
-        ->name('operator.updateStatus');
+    Route::resource('dosen', DosenController::class);
 
-    // resourceful routes for dokumen; index of the controller will still return
-    // the generic listing used in the role-specific dashboards when appropriate.
-    // override parameter name to avoid Laravel interpreting 'dokumen' singular as 'dokuman'
-    Route::resource('dokumen', DokumenController::class)
-        ->parameters(['dokumen' => 'dokumen'])
-        ->only(['index','create','store','show','edit','update','destroy']);
+    Route::resource('hasil-turnitin', HasilTurnitinController::class);
 
-    // resourceful routes for new controllers
-    Route::resource('dosen', DosenController::class)
-        ->parameters(['dosen' => 'dosen']);
-    Route::resource('hasil-turnitin', HasilTurnitinController::class)
-        ->parameters(['hasil-turnitin' => 'hasilTurnitin']);
-    Route::resource('log-aktivitas', LogAktivitasController::class)
-        ->parameters(['log-aktivitas' => 'logAktivitas']);
-
-    // if you still need a named shortcut for the dashboard you can use:
-    // Route::get('/dokumen', [DokumenController::class, 'index'])->name('dokumen.dashboard');
+    Route::resource('log-aktivitas', LogAktivitasController::class);
 });
 
-require __DIR__.'/auth.php';
+/*
+|--------------------------------------------------------------------------
+| OPERATOR
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('operator')->group(function () {
+    Route::get('/dashboard', [OperatorController::class, 'index'])->name('operator.dashboard');
+    Route::get('/dokumen', [OperatorController::class, 'index'])->name('operator.dokumen.index');
+    Route::get('/dokumen/create', [OperatorController::class, 'create'])->name('operator.dokumen.create');
+    Route::post('/dokumen', [OperatorController::class, 'store'])->name('operator.dokumen.store');
+    Route::get('/dokumen/{dokumen}', [OperatorController::class, 'show'])->name('operator.dokumen.show');
+    Route::get('/dokumen/{dokumen}/edit', [OperatorController::class, 'edit'])->name('operator.dokumen.edit');
+    Route::put('/dokumen/{dokumen}', [OperatorController::class, 'update'])->name('operator.dokumen.update');
+    Route::delete('/dokumen/{dokumen}', [OperatorController::class, 'destroy'])->name('operator.dokumen.destroy');
+    Route::patch('/dokumen/{dokumen}/status', [OperatorController::class, 'updateStatus'])->name('operator.updateStatus');
+});
+
+/*
+|--------------------------------------------------------------------------
+| MAHASISWA
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('mahasiswa')->group(function () {
+    Route::get('/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
+
+    Route::get('/dokumen', [MahasiswaDokumenController::class, 'index'])->name('mahasiswa.dokumen.index');
+
+    Route::get('/dokumen/create', [MahasiswaDokumenController::class, 'create'])->name('mahasiswa.dokumen.create');
+
+    Route::post('/dokumen', [MahasiswaDokumenController::class, 'store'])->name('mahasiswa.dokumen.store');
+
+    Route::get('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'show'])->name('mahasiswa.dokumen.show');
+
+    Route::get('/dokumen/{dokumen}/edit', [MahasiswaDokumenController::class, 'edit'])->name('mahasiswa.dokumen.edit');
+
+    Route::put('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'update'])->name('mahasiswa.dokumen.update');
+
+    Route::delete('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'destroy'])->name('mahasiswa.dokumen.destroy');
+
+    Route::get('/riwayat', [MahasiswaDokumenController::class, 'riwayat'])->name('mahasiswa.riwayat');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Dosen
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('dosen')->group(function () {
+    Route::get('/', [DosenController::class, 'index'])->name('dosen.index');
+    Route::get('/create', [DosenController::class, 'create'])->name('dosen.create');
+    Route::post('/', [DosenController::class, 'store'])->name('dosen.store');
+    Route::get('/{dosen}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
+    Route::put('/{dosen}', [DosenController::class, 'update'])->name('dosen.update');
+    Route::delete('/{dosen}', [DosenController::class, 'destroy'])->name('dosen.destroy');
+    Route::get('/{dosen}', [DosenController::class, 'show'])->name('dosen.show');
+});
+
+require __DIR__ . '/auth.php';

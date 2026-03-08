@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Operator;
+namespace App\Http\Controllers\Dosen;
 
 use Illuminate\Http\Request;
 use App\Models\Dokumen;
@@ -37,7 +37,7 @@ class DokumenController extends Controller
         // you can change to paginate() if you need pagination in the view
         $dokumen = $query->orderBy('created_at', 'desc')->get();
 
-        return view('dokumen.dashboard', compact('dokumen'));
+        return view('dosen.dokumen.dashboard', compact('dokumen'));
     }
 
     /**
@@ -45,7 +45,7 @@ class DokumenController extends Controller
      */
     public function create(): View
     {
-        return view('dokumen.create');
+        return view('dosen.dokumen.create');
     }
 
     /**
@@ -74,7 +74,7 @@ class DokumenController extends Controller
 
         Dokumen::create($data);
 
-        return redirect()->route('dokumen.index')
+        return redirect()->route('dosen.dokumen.index')
             ->with('success', 'Dokumen berhasil ditambahkan.');
     }
 
@@ -83,7 +83,7 @@ class DokumenController extends Controller
      */
     public function show(Dokumen $dokumen): View
     {
-        return view('dokumen.show', compact('dokumen'));
+        return view('dosen.dokumen.show', compact('dokumen'));
     }
 
     /**
@@ -91,7 +91,7 @@ class DokumenController extends Controller
      */
     public function edit(Dokumen $dokumen): View
     {
-        return view('dokumen.edit', compact('dokumen'));
+        return view('dosen.dokumen.edit', compact('dokumen'));
     }
 
     /**
@@ -108,7 +108,7 @@ class DokumenController extends Controller
 
         $dokumen->update($data);
 
-        return redirect()->route('dokumen.index')
+        return redirect()->route('dosen.dokumen.index')
             ->with('success', 'Data dokumen diperbarui.');
     }
 
@@ -122,7 +122,7 @@ class DokumenController extends Controller
             Storage::delete($dokumen->bukti_bayar);
         }
 
-        return redirect()->route('dokumen.index')
+        return redirect()->route('dosen.dokumen.index')
             ->with('success', 'Dokumen dihapus.');
     }
 }
