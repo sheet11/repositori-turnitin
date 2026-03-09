@@ -125,4 +125,17 @@ class DokumenController extends Controller
         return redirect()->route('operator.dokumen.index')
             ->with('success', 'Dokumen dihapus.');
     }
+
+    public function download($id)
+    {
+        $dokumen = Dokumen::findOrFail($id);
+
+        $path = storage_path('app/private/' . $dokumen->file_asli);
+
+        if (!file_exists($path)) {
+            abort(404);
+        }
+
+        return response()->download($path);
+    }
 }

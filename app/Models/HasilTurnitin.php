@@ -20,7 +20,9 @@ class HasilTurnitin extends Model
     protected $fillable = [
         'dokumen_id',
         'similarity_index',
-        'status'
+        'file_laporan',
+        'tanggal_cek',
+        'operator_id',
     ];
 
     /**

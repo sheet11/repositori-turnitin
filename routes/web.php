@@ -12,7 +12,7 @@ use App\Http\Controllers\Operator\DokumenController as OperatorDokumenController
 use App\Http\Controllers\Dosen\DokumenController as DosenDokumenController;
 use App\Http\Controllers\Operator\OperatorController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\HasilTurnitinController;
+use App\Http\Controllers\Operator\HasilTurnitinController;
 use App\Http\Controllers\LogAktivitasController;
 
 /*
@@ -89,6 +89,10 @@ Route::prefix('operator')->group(function () {
     Route::put('/dokumen/{dokumen}', [OperatorDokumenController::class, 'update'])->name('operator.dokumen.update');
     Route::delete('/dokumen/{dokumen}', [OperatorDokumenController::class, 'destroy'])->name('operator.dokumen.destroy');
     Route::patch('/dokumen/{dokumen}/status', [OperatorController::class, 'updateStatus'])->name('operator.updateStatus');
+    Route::get('/dokumen/download/{id}', [OperatorDokumenController::class, 'download'])->name('operator.dokumen.download');
+    Route::get('/turnitin/create/{id}',[HasilTurnitinController::class,'create'])->name('operator.turnitin.create');
+    Route::post('/turnitin',[HasilTurnitinController::class,'store'])->name('operator.turnitin.store');
+    Route::get('/turnitin/download/{id}',[HasilTurnitinController::class, 'download'])->name('operator.turnitin.download');
 });
 
 /*

@@ -56,9 +56,9 @@ class RegisteredUserController extends Controller
                 'nim' => $request->nim,
                 'nama' => $request->name,
                 'program_studi_id' => $request->program_studi_id,
+                'user_id' => $user->id,
             ]);
             // Update user with mahasiswa_id
-            $user->update(['mahasiswa_id' => $request->nim]);
         } elseif ($request->role_id == 4) { // Dosen
             Dosen::create([
                 'nidn' => $request->nidn,

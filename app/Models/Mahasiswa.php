@@ -10,19 +10,25 @@ class Mahasiswa extends Model
         'nim',
         'nama',
         'program_studi_id',
+        'user_id'
     ];
 
-    protected $primaryKey = 'nim';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $primaryKey = 'id';
+    public $incrementing = true;
+    protected $keyType = 'integer';
 
     public function user()
     {
-        return $this->hasOne(User::class, 'mahasiswa_id', 'nim');
+        return $this->belongsTo(User::class);
     }
 
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class);
+    }
+
+    public function dokumen()
+    {
+        return $this->hasMany(Dokumen::class, 'user_id', 'user_id');
     }
 }

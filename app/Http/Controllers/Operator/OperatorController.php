@@ -40,7 +40,7 @@ class OperatorController extends Controller
 
         $dokumen->update($data);
 
-        return redirect()->route('operator.dashboard')
+        return redirect()->route('operator.dokumen.index')
                          ->with('success', 'Status dokumen diperbarui.');
     }
 }
