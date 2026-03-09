@@ -1,12 +1,10 @@
-@extends('layouts.dashboard')
+@extends('layouts.operator')
 
 @section('content')
 
     <div class="d-flex justify-content-between align-items-center mb-6">
-        <h1 class="text-2xl font-bold">Data Dokumen</h1>
-        <a href="{{ route('dokumen.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Tambah Dokumen
-        </a>
+        <h1 class="text-2xl font-bold">Dashboard Operator</h1>
+        {{-- operators don't need to add new documents --}}
     </div>
 
     @if (session('success'))
@@ -54,33 +52,39 @@
                                         @if ($d->status == 'Pending')
                                             <span class="badge bg-warning text-dark">{{ $d->status }}</span>
                                         @elseif($d->status == 'Diproses')
-                                            <span class="badge bg-info">{{ $d->status }}</span>
+                                            <span class="badge bg-info text-white">{{ $d->status }}</span>
                                         @elseif($d->status == 'Selesai')
-                                            <span class="badge bg-success">{{ $d->status }}</span>
+                                            <span class="badge bg-success text-white">{{ $d->status }}</span>
                                         @elseif($d->status == 'Ditolak')
-                                            <span class="badge bg-danger">{{ $d->status }}</span>
+                                            <span class="badge bg-danger text-white">{{ $d->status }}</span>
                                         @else
-                                            <span class="badge bg-secondary">{{ $d->status }}</span>
+                                            <span class="badge bg-secondary text-white">{{ $d->status }}</span>
                                         @endif
                                     </td>
                                     <td>{{ $d->created_at->format('d-m-Y') }}</td>
                                     <td>
-                                        <a href="{{ route('dokumen.show', $d->id) }}" class="btn btn-sm btn-info"
+                                        <a href="{{ route('operator.dokumen.show', $d->id) }}" class="btn btn-sm btn-info"
                                             title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('dokumen.edit', $d->id) }}" class="btn btn-sm btn-warning"
-                                            title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="{{ route('dokumen.destroy', $d->id) }}" method="POST"
-                                            style="display:inline;">
+                                        {{-- allow operator to change status quickly --}}
+                                        <form action="{{ route('operator.updateStatus', $d->id) }}" method="POST"
+                                            class="d-inline">
                                             @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Hapus"
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                            @method('PATCH')
+                                            <select name="status" onchange="this.form.submit()"
+                                                class="btn btn-primary dropdown-toggle">
+                                                <option class="dropdown-item" value="Pending"
+                                                    {{ $d->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                                <option class="dropdown-item" value="Diproses"
+                                                    {{ $d->status == 'Diproses' ? 'selected' : '' }}>
+                                                    Di Proses
+                                                </option>
+                                                <option class="dropdown-item" value="Selesai"
+                                                    {{ $d->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                                                <option class="dropdown-item" value="Ditolak"
+                                                    {{ $d->status == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                                            </select>
                                         </form>
                                     </td>
                                 </tr>
@@ -92,7 +96,6 @@
                                 </td>
                             </tr>
                         @endif
-
                     </tbody>
                 </table>
             </div>

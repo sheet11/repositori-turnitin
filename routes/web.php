@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DokumenController;
 use App\Http\Controllers\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Mahasiswa\DokumenController as MahasiswaDokumenController;
+use App\Http\Controllers\Operator\DokumenController as OperatorDokumenController;
+use App\Http\Controllers\Dosen\DokumenController as DosenDokumenController;
 use App\Http\Controllers\Operator\OperatorController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\HasilTurnitinController;
@@ -79,13 +81,13 @@ Route::prefix('admin')->group(function () {
 
 Route::prefix('operator')->group(function () {
     Route::get('/dashboard', [OperatorController::class, 'index'])->name('operator.dashboard');
-    Route::get('/dokumen', [OperatorController::class, 'index'])->name('operator.dokumen.index');
-    Route::get('/dokumen/create', [OperatorController::class, 'create'])->name('operator.dokumen.create');
-    Route::post('/dokumen', [OperatorController::class, 'store'])->name('operator.dokumen.store');
-    Route::get('/dokumen/{dokumen}', [OperatorController::class, 'show'])->name('operator.dokumen.show');
-    Route::get('/dokumen/{dokumen}/edit', [OperatorController::class, 'edit'])->name('operator.dokumen.edit');
-    Route::put('/dokumen/{dokumen}', [OperatorController::class, 'update'])->name('operator.dokumen.update');
-    Route::delete('/dokumen/{dokumen}', [OperatorController::class, 'destroy'])->name('operator.dokumen.destroy');
+    Route::get('/dokumen', [OperatorDokumenController::class, 'index'])->name('operator.dokumen.index');
+    Route::get('/dokumen/create', [OperatorDokumenController::class, 'create'])->name('operator.dokumen.create');
+    Route::post('/dokumen', [OperatorDokumenController::class, 'store'])->name('operator.dokumen.store');
+    Route::get('/dokumen/{dokumen}', [OperatorDokumenController::class, 'show'])->name('operator.dokumen.show');
+    Route::get('/dokumen/{dokumen}/edit', [OperatorDokumenController::class, 'edit'])->name('operator.dokumen.edit');
+    Route::put('/dokumen/{dokumen}', [OperatorDokumenController::class, 'update'])->name('operator.dokumen.update');
+    Route::delete('/dokumen/{dokumen}', [OperatorDokumenController::class, 'destroy'])->name('operator.dokumen.destroy');
     Route::patch('/dokumen/{dokumen}/status', [OperatorController::class, 'updateStatus'])->name('operator.updateStatus');
 });
 
