@@ -61,7 +61,7 @@ Route::get('/dashboard', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
     Route::resource('dokumen', DokumenController::class);
@@ -79,7 +79,7 @@ Route::prefix('admin')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('operator')->group(function () {
+Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('/dashboard', [OperatorController::class, 'index'])->name('operator.dashboard');
     Route::get('/dokumen', [OperatorDokumenController::class, 'index'])->name('operator.dokumen.index');
     Route::get('/dokumen/create', [OperatorDokumenController::class, 'create'])->name('operator.dokumen.create');
@@ -101,7 +101,7 @@ Route::prefix('operator')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('mahasiswa')->group(function () {
+Route::middleware(['auth'])->prefix('mahasiswa')->group(function () {
     Route::get('/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 
     Route::get('/dokumen', [MahasiswaDokumenController::class, 'index'])->name('mahasiswa.dokumen.index');
@@ -127,7 +127,7 @@ Route::prefix('mahasiswa')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('dosen')->group(function () {
+Route::middleware(['auth'])->prefix('dosen')->group(function () {
     Route::get('/', [DosenController::class, 'index'])->name('dosen.index');
     Route::get('/create', [DosenController::class, 'create'])->name('dosen.create');
     Route::post('/', [DosenController::class, 'store'])->name('dosen.store');

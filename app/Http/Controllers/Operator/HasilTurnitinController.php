@@ -32,7 +32,7 @@ class HasilTurnitinController extends Controller
             $namaFile = 'turnitin_' . $data['dokumen_id'] . '_' . time() . '.pdf';
 
             $path = $file->storeAs(
-                'private/turnitin',
+                'turnitin',
                 $namaFile
             );
 
@@ -44,7 +44,8 @@ class HasilTurnitinController extends Controller
 
         HasilTurnitin::create($data);
 
-        return back()->with('success', 'Hasil Turnitin berhasil diupload');
+        return redirect()->route('operator.dokumen.index')
+        ->with('success', 'Hasil Turnitin berhasil diupload');
     }
     public function download($id)
     {

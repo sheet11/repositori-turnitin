@@ -28,6 +28,7 @@
                         <th>NIM</th>
                         <th>Judul</th>
                         <th>Jenis</th>
+                        <th>File</th>
                         <th>Status</th>
                         <th>Tanggal Pengajuan</th>
                         <th>Aksi</th>
@@ -40,8 +41,8 @@
                         <th>NIM</th>
                         <th>Judul</th>
                         <th>Jenis</th>
+                        <th>File</th>
                         <th>Status</th>
-                        <th>file</th>
                         <th>Tanggal Pengajuan</th>
                         <th>Aksi</th>
                     </tr>
