@@ -104,32 +104,32 @@
 
             <li class="nav-item">
                 @php
-                    use App\Models\Dokumen;
-                    $cekDokumen = \App\Models\Dokumen::where('user_id', auth()->id())
-                        ->where('status', '!=', 'Selesai')
-                        ->count();
-                    $cekpending = \App\Models\Dokumen::where('user_id', auth()->id())
-                        ->where('status', 'Pending')
-                        ->count();
-                    $d = Dokumen::where('user_id', Auth::id())->latest()->first();
+                use App\Models\Dokumen;
+                $cekDokumen = \App\Models\Dokumen::where('user_id', auth()->id())
+                ->where('status', '!=', 'Selesai')
+                ->count();
+                $cekpending = \App\Models\Dokumen::where('user_id', auth()->id())
+                ->where('status', 'Pending')
+                ->count();
+                $d = Dokumen::where('user_id', Auth::id())->latest()->first();
                 @endphp
 
                 @if ((auth()->user()->role_id == 3 || auth()->user()->role_id == 4) && $cekDokumen == 0)
-                    <a class="nav-link" href="{{ route('mahasiswa.dokumen.create') }}">
-                        <i class="fas fa-fw fa-file-alt"></i>
-                        <span>Pengajuan</span>
-                    </a>
+                <a class="nav-link" href="{{ route('mahasiswa.dokumen.create') }}">
+                    <i class="fas fa-fw fa-file-alt"></i>
+                    <span>Pengajuan</span>
+                </a>
                 @elseif ((auth()->user()->role_id == 3 || auth()->user()->role_id == 4) && $cekpending > 0)
-                    <a class="nav-link" href="{{ route('mahasiswa.dokumen.show', $d->id) }}">
-                        <i class="fas fa-fw fa-file-alt"></i>
-                        <span>Pengajuan</span>
-                    </a>
+                <a class="nav-link" href="{{ route('mahasiswa.dokumen.show', $d->id) }}">
+                    <i class="fas fa-fw fa-file-alt"></i>
+                    <span>Pengajuan</span>
+                </a>
                 @endif
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('mahasiswa.dokumen.index') }}">
                     <i class="fas fa-fw fa-file-invoice"></i>
-                    <span>Riwayat Pengajuan</span></a>
+                    <span>Hasil Cek Turnitin</span></a>
             </li>
 
             <!-- Divider -->
@@ -156,8 +156,8 @@
                     <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small"
-                                placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                                aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button">
                                     <i class="fas fa-search fa-sm"></i>
@@ -296,8 +296,8 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle"
-                                            src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="...">
+                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
+                                            alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div>
@@ -317,8 +317,8 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span
-                                    class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name
+                                    }}</span>
                                 <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
@@ -337,8 +337,7 @@
                                     Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal"
-                                    data-target="#logoutModal">
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>

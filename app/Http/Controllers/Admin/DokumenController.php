@@ -64,17 +64,17 @@ class DokumenController extends Controller
 
         // handle file uploads as needed
         if ($request->hasFile('file_asli')) {
-            $data['file_asli'] = $request->file('file_asli')->store('dokumen');
+            $data['file_asli'] = $request->file('file_asli')->store('dokumen','public');
         }
         if ($request->hasFile('bukti_bayar')) {
-            $data['bukti_bayar'] = $request->file('bukti_bayar')->store('bukti');
+            $data['bukti_bayar'] = $request->file('bukti_bayar')->store('bukti','public');
         }
 
         $data['user_id'] = Auth::id();
 
         Dokumen::create($data);
 
-        return redirect()->route('admin.dokumen.index')
+        return redirect()->route('admin.dokumen.dashboard')
             ->with('success', 'Dokumen berhasil ditambahkan.');
     }
 
@@ -108,7 +108,7 @@ class DokumenController extends Controller
 
         $dokumen->update($data);
 
-        return redirect()->route('admin.dokumen.index')
+        return redirect()->route('admin.dokumen.dashboard')
             ->with('success', 'Data dokumen diperbarui.');
     }
 
@@ -122,7 +122,7 @@ class DokumenController extends Controller
             Storage::delete($dokumen->bukti_bayar);
         }
 
-        return redirect()->route('admin.dokumen.index')
+        return redirect()->route('admin.dokumen.dashboard')
             ->with('success', 'Dokumen dihapus.');
     }
 }

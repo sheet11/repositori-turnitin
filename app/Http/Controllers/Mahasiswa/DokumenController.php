@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\HasilTurnitin;
 
 class DokumenController extends Controller
 {
@@ -20,7 +21,7 @@ class DokumenController extends Controller
         $user = Auth::user();
 
         // start with base query
-        $query = Dokumen::query();
+        $query = Dokumen::with('hasilTurnitin');
 
         // mahasiswa only sees their own dokumen
         if ($user && optional($user->role)->nama_role === 'Mahasiswa') {
@@ -64,17 +65,17 @@ class DokumenController extends Controller
 
         // handle file uploads as needed
         if ($request->hasFile('file_asli')) {
-            $data['file_asli'] = $request->file('file_asli')->store('dokumen');
+            $data['file_asli'] = $request->file('file_asli')->store('dokumen','public');
         }
         if ($request->hasFile('bukti_bayar')) {
-            $data['bukti_bayar'] = $request->file('bukti_bayar')->store('bukti');
+            $data['bukti_bayar'] = $request->file('bukti_bayar')->store('bukti','public');
         }
 
         $data['user_id'] = Auth::id();
 
         Dokumen::create($data);
 
-        return redirect()->route('mahasiswa.dokumen.index')
+        return redirect()->route('mahasiswa.dokumen.show')
             ->with('success', 'Dokumen berhasil ditambahkan.');
     }
 
@@ -124,5 +125,18 @@ class DokumenController extends Controller
 
         return redirect()->route('mahasiswa.dokumen.index')
             ->with('success', 'Dokumen dihapus.');
+    }
+
+        public function download($id)
+    {
+        $dokumen = HasilTurnitin::findOrFail($id);
+
+        $path = storage_path('app/private/' . $dokumen->file_hasil);
+
+        if (!file_exists($path)) {
+            abort(404);
+        }
+
+        return response()->download($path);
     }
 }

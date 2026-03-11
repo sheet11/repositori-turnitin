@@ -116,9 +116,9 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link" href=""><i class="fas fa-fw fa-users"></i><span>Management User</span></a>
-            </li>
+            </li> --}}
         </ul>
         <!-- End of Sidebar -->
 

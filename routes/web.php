@@ -14,6 +14,7 @@ use App\Http\Controllers\Operator\OperatorController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\Operator\HasilTurnitinController;
 use App\Http\Controllers\LogAktivitasController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,7 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dokumen', [DokumenController::class, 'index'])->name('admin.dokumen.index');
 
     Route::resource('dokumen', DokumenController::class);
 
@@ -71,6 +73,16 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::resource('hasil-turnitin', HasilTurnitinController::class);
 
     Route::resource('log-aktivitas', LogAktivitasController::class);
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
+
+    Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
+    Route::post('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
+
+    Route::delete('/users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
 });
 
 /*
@@ -103,22 +115,15 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
 
 Route::middleware(['auth'])->prefix('mahasiswa')->group(function () {
     Route::get('/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
-
     Route::get('/dokumen', [MahasiswaDokumenController::class, 'index'])->name('mahasiswa.dokumen.index');
-
     Route::get('/dokumen/create', [MahasiswaDokumenController::class, 'create'])->name('mahasiswa.dokumen.create');
-
     Route::post('/dokumen', [MahasiswaDokumenController::class, 'store'])->name('mahasiswa.dokumen.store');
-
     Route::get('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'show'])->name('mahasiswa.dokumen.show');
-
     Route::get('/dokumen/{dokumen}/edit', [MahasiswaDokumenController::class, 'edit'])->name('mahasiswa.dokumen.edit');
-
     Route::put('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'update'])->name('mahasiswa.dokumen.update');
-
     Route::delete('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'destroy'])->name('mahasiswa.dokumen.destroy');
-
     Route::get('/riwayat', [MahasiswaDokumenController::class, 'riwayat'])->name('mahasiswa.riwayat');
+    Route::get('/dokumen/download/{id}', [MahasiswaDokumenController::class, 'download'])->name('mahasiswa.dokumen.download');
 });
 
 /*

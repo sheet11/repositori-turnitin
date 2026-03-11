@@ -57,9 +57,8 @@
                         <td>{{ $d->judul }}</td>
                         <td>{{ $d->jenis_dokumen }}</td>
                         <td>
-                            <a href="{{ route('operator.dokumen.download', $d->id) }}" target="_blank"
-                                class="btn btn-sm btn-primary">
-                                <i class="fas fa-download"></i> Download
+                            <a href="{{ asset('storage/'.$d->file_asli) }}" download class="btn btn-success btn-sm">
+                                Download
                             </a>
                         </td>
                         <td>

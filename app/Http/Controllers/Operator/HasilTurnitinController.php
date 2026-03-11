@@ -19,6 +19,7 @@ class HasilTurnitinController extends Controller
 
     public function store(Request $request)
     {
+        $dokumen = Dokumen::findOrFail($request->dokumen_id);
         $data = $request->validate([
             'dokumen_id' => 'required',
             'similarity_index' => 'required|numeric',
@@ -33,7 +34,8 @@ class HasilTurnitinController extends Controller
 
             $path = $file->storeAs(
                 'turnitin',
-                $namaFile
+                $namaFile,
+                'public'
             );
 
             $data['file_laporan'] = $path;
@@ -43,6 +45,8 @@ class HasilTurnitinController extends Controller
         $data['operator_id'] = Auth::id();
 
         HasilTurnitin::create($data);
+
+        $dokumen->update(['status' => 'Selesai']);
 
         return redirect()->route('operator.dokumen.index')
         ->with('success', 'Hasil Turnitin berhasil diupload');
