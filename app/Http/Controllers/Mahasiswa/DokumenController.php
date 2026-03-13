@@ -75,7 +75,7 @@ class DokumenController extends Controller
 
         Dokumen::create($data);
 
-        return redirect()->route('mahasiswa.dokumen.show')
+        return redirect()->route('mahasiswa.dokumen.index')
             ->with('success', 'Dokumen berhasil ditambahkan.');
     }
 

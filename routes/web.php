@@ -83,6 +83,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::post('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
 
     Route::delete('/users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
+    
 });
 
 /*

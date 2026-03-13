@@ -31,12 +31,14 @@ class DokumenController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('judul', 'like', "%{$search}%")
-                    ->orWhere('nim', 'like', "%{$search}%");
+                    ->orWhere('nim', 'like', "%{$search}%")
+                    ->orWhere('jenis_dokumen', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%");
             });
         }
 
         // you can change to paginate() if you need pagination in the view
-        $dokumen = $query->orderBy('created_at', 'desc')->get();
+        $dokumen = $query->orderBy('created_at', 'desc')->paginate(10);
 
         return view('admin.dokumen.dashboard', compact('dokumen'));
     }

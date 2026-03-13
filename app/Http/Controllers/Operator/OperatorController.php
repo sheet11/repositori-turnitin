@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Dokumen;
 use Illuminate\View\View;
 use App\Http\Controllers\Controller;
+use App\Models\HasilTurnitin;
 
 class OperatorController extends Controller
 {
@@ -16,17 +17,11 @@ class OperatorController extends Controller
      */
     public function index(Request $request): View
     {
-        $search = $request->query('search');
-        $query = Dokumen::query();
+        $total = Dokumen::count();
+        $pending = Dokumen::where('status', 'Pending')->count();
+        $rataSimilarity = HasilTurnitin::avg('similarity_index');
 
-        if ($search) {
-            $query->where('judul', 'like', "%{$search}%")
-                  ->orWhere('nim', 'like', "%{$search}%");
-        }
-
-        $dokumen = $query->orderBy('created_at', 'desc')->get();
-
-        return view('operator.dashboard', compact('dokumen'));
+        return view('operator.dashboard', compact('total', 'pending', 'rataSimilarity'));
     }
 
     /**
