@@ -36,8 +36,10 @@
                     <p>
                         @if ($dokumen->status == 'Pending')
                         <span class="badge bg-warning text-dark">{{ $dokumen->status }}</span>
-                        @elseif($dokumen->status == 'Di Proses')
+                        @elseif($dokumen->status == 'Diproses')
                         <span class="badge bg-info">{{ $dokumen->status }}</span>
+                        @elseif($dokumen->status == 'Sudah Dicek')
+                        <span class="badge bg-primary text-white">{{ $dokumen->status }}</span>
                         @elseif($dokumen->status == 'Selesai')
                         <span class="badge bg-success">{{ $dokumen->status }}</span>
                         @elseif($dokumen->status == 'Ditolak')
@@ -102,9 +104,9 @@
                     </p>
                     @if ($dokumen->hasilTurnitin->file_laporan)
                     <p>
-                        <a href="{{ asset('storage/'.$dokumen->hasilTurnitin->file_laporan) }}" target="_blank"
+                        <a href="{{ route('mahasiswa.dokumen.download', $dokumen->hasilTurnitin->id) }}" target="_blank"
                             class="btn btn-sm btn-primary">
-                            <i class="fas fa-file-pdf"></i> Lihat Laporan Turnitin
+                            <i class="fas fa-file-pdf"></i> Download Laporan Turnitin
                         </a>
                     </p>
                     @endif

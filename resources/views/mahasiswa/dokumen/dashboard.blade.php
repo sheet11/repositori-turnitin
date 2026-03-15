@@ -76,7 +76,7 @@
                         </td>
                         <td>
                             @if($d->hasilTurnitin)
-                            <a href="{{ asset('storage/'.$d->hasilTurnitin->file_laporan) }}"
+                            <a href="{{ route('mahasiswa.dokumen.download', $d->hasilTurnitin->id) }}"
                                 class="btn btn-success btn-sm" download>
                                 Download
                             </a>

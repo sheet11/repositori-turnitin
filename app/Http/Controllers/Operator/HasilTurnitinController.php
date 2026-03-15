@@ -48,7 +48,7 @@ class HasilTurnitinController extends Controller
 
         HasilTurnitin::create($data);
 
-        $dokumen->update(['status' => 'Selesai']);
+        $dokumen->update(['status' => 'Sudah Dicek']);
         // =============================
         // Kirim Email ke Mahasiswa
         // =============================
@@ -69,7 +69,7 @@ class HasilTurnitinController extends Controller
     {
         $turnitin = HasilTurnitin::findOrFail($id);
 
-        $path = storage_path('app/' . $turnitin->file_laporan);
+        $path = storage_path('app/public/' . $turnitin->file_laporan);
 
         if (!file_exists($path)) {
             abort(404);

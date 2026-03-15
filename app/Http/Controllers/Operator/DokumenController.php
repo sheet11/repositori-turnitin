@@ -16,11 +16,14 @@ class DokumenController extends Controller
      */
     public function index(Request $request): View
     {
-        $search = $request->query('search');
+        $search = $request->search;
+        $tahun = $request->tahun;
+        $status = $request->status;
+        
         $user = Auth::user();
 
         // start with base query
-        $query = Dokumen::query();
+        $query = Dokumen::with('mahasiswa');
 
         // mahasiswa only sees their own dokumen
         if ($user && optional($user->role)->nama_role === 'Mahasiswa') {
@@ -30,11 +33,22 @@ class DokumenController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('judul', 'like', "%{$search}%")
-                    ->orWhere('nim', 'like', "%{$search}%");
+                  ->orWhere('jenis_dokumen', 'like', "%{$search}%")
+                  ->orWhereHas('mahasiswa', function ($mq) use ($search) {
+                      $mq->where('nim', 'like', "%{$search}%")
+                         ->orWhere('nama', 'like', "%{$search}%");
+                  });
             });
         }
 
-        // you can change to paginate() if you need pagination in the view
+        if ($tahun) {
+            $query->whereYear('created_at', $tahun);
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
         $dokumen = $query->orderBy('created_at', 'desc')->get();
 
         return view('operator.dokumen.dashboard', compact('dokumen'));
@@ -103,7 +117,7 @@ class DokumenController extends Controller
             'judul' => 'required|string|max:255',
             'jenis_dokumen' => 'required|in:Skripsi,Jurnal,Proposal,KTI',
             'nim' => 'required|string|max:50',
-            'status' => 'required|in:Pending,Di Proses,Ditolak,Selesai',
+            'status' => 'required|in:Pending,Diproses,Sudah Dicek,Ditolak,Selesai',
         ]);
 
         $dokumen->update($data);

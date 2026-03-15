@@ -34,11 +34,12 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'role_id' => ['required', 'integer', 'in:3,4'],
             'nim' => ['required_if:role_id,3', 'string', 'max:20', 'unique:mahasiswas,nim'],
             'program_studi_id' => ['required_if:role_id,3', 'integer', 'exists:program_studis,id'],
             'nidn' => ['nullable', 'required_if:role_id,4', 'string', 'max:20', 'unique:dosens,nidn'],
+            'tahun_angkatan' => ['required_if:role_id,3', 'integer', 'between:2020,' . date('Y')],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -56,6 +57,7 @@ class RegisteredUserController extends Controller
                 'nim' => $request->nim,
                 'nama' => $request->name,
                 'program_studi_id' => $request->program_studi_id,
+                'tahun_masuk' => $request->tahun_angkatan,
                 'user_id' => $user->id,
             ]);
             // Update user with mahasiswa_id

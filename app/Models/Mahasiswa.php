@@ -10,6 +10,7 @@ class Mahasiswa extends Model
         'nim',
         'nama',
         'program_studi_id',
+        'tahun_masuk',
         'user_id'
     ];
 

@@ -131,10 +131,15 @@ class DokumenController extends Controller
     {
         $dokumen = HasilTurnitin::findOrFail($id);
 
-        $path = storage_path('app/private/' . $dokumen->file_hasil);
+        $path = storage_path('app/public/' . $dokumen->file_laporan);
 
         if (!file_exists($path)) {
             abort(404);
+        }
+
+        // Update parent document status to Selesai
+        if ($dokumen->dokumen && $dokumen->dokumen->status == 'Sudah Dicek') {
+            $dokumen->dokumen->update(['status' => 'Selesai']);
         }
 
         return response()->download($path);

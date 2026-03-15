@@ -30,7 +30,7 @@ class OperatorController extends Controller
     public function updateStatus(Request $request, Dokumen $dokumen)
     {
         $data = $request->validate([
-            'status' => 'required|in:Pending,Diproses,Ditolak,Selesai',
+            'status' => 'required|in:Pending,Diproses,Sudah Dicek,Ditolak,Selesai',
         ]);
 
         $dokumen->update($data);

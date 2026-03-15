@@ -75,8 +75,10 @@
                             <option value="">-- Pilih Status --</option>
                             <option value="Pending" {{ old('status', $dokumen->status) == 'Pending' ? 'selected' : '' }}>
                                 Pending</option>
-                            <option value="Di Proses"
-                                {{ old('status', $dokumen->status) == 'Di Proses' ? 'selected' : '' }}>Di Proses</option>
+                            <option value="Diproses"
+                                {{ old('status', $dokumen->status) == 'Diproses' ? 'selected' : '' }}>Diproses</option>
+                            <option value="Sudah Dicek" {{ old('status', $dokumen->status) == 'Sudah Dicek' ? 'selected' : '' }}>
+                                Sudah Dicek</option>
                             <option value="Selesai" {{ old('status', $dokumen->status) == 'Selesai' ? 'selected' : '' }}>
                                 Selesai</option>
                             <option value="Ditolak" {{ old('status', $dokumen->status) == 'Ditolak' ? 'selected' : '' }}>

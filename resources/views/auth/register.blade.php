@@ -18,7 +18,7 @@
             <div class="card-body p-0">
                 <div class="row">
 
-                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image" style="background-image: url('{{ asset('img/register_bg.png') }}'); background-position: center; background-size: cover;"></div>
 
                     <div class="col-lg-7">
                         <div class="p-5">
@@ -69,6 +69,15 @@
                                         @foreach ($programStudis as $prodi)
                                             <option value="{{ $prodi->id }}">{{ $prodi->nama_prodi }}</option>
                                         @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group" id="tahunangkatan-field" style="display:none;">
+                                    <select name="tahun_angkatan" id="tahun_angkatan" class="form-control">
+                                        <option value="">Pilih Tahun Angkatan</option>
+                                        @for ($i = date('Y'); $i >= 2020; $i--)
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endfor
                                     </select>
                                 </div>
 
@@ -123,11 +132,13 @@
             let nim = document.getElementById('nim-field');
             let nidn = document.getElementById('nidn-field');
             let prodi = document.getElementById('program-studi-field');
+            let tahunAngkatan = document.getElementById('tahunangkatan-field');
 
             if (role == 3) {
                 nim.style.display = 'block';
                 prodi.style.display = 'block';
                 nidn.style.display = 'none';
+                tahunAngkatan.style.display = 'block';
             } else if (role == 4) {
                 nim.style.display = 'none';
                 prodi.style.display = 'none';
