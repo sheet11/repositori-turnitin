@@ -51,6 +51,20 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
+                    <h6 class="text-muted">Dikerjakan Oleh (Operator)</h6>
+                    <p class="font-weight-bold">
+                        @if ($dokumen->assigned_operator_id)
+                            <a href="#">{{ $dokumen->assignedOperator->name }}</a>
+                        @else
+                            <span class="text-muted font-italic">Belum Diambil</span>
+                        @endif
+                    </p>
+                </div>
+                <!-- Empty spacer column or add more items here -->
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
                     <h6 class="text-muted">Tanggal Upload</h6>
                     <p class="font-weight-bold">{{ optional($dokumen->created_at)->format('d-m-Y H:i:s') }}</p>
                 </div>

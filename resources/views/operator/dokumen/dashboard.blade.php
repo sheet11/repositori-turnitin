@@ -2,9 +2,66 @@
 
 @section('content')
 
-    <div class="d-flex justify-content-between align-items-center mb-6">
-        <h1 class="text-2xl font-bold">Dashboard Operator</h1>
-        {{-- operators don't need to add new documents --}}
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Antrean Pengajuan Dokumen</h1>
+        <a href="{{ route('operator.dokumen.export') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+    </div>
+
+    <div class="row">
+        <!-- Antrean Card -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Antrean (Belum Diambil)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalAntrean }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inbox fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sedang Dikerjakan Card -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Sedang Saya Kerjakan</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $sedangDikerjakan }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-spinner fa-spin fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selesai Hari Ini Card -->
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Selesai Hari Ini (Keseluruhan)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $selesaiHariIni }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     @if (session('success'))
@@ -43,12 +100,6 @@
                                 <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending
                                 </option>
                                 <option value="Diproses" {{ request('status') == 'Diproses' ? 'selected' : '' }}>Diproses
-                                </option>
-                                <option value="Sudah Dicek" {{ request('status') == 'Sudah Dicek' ? 'selected' : '' }}>Sudah Dicek
-                                </option>
-                                <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai
-                                </option>
-                                <option value="Ditolak" {{ request('status') == 'Ditolak' ? 'selected' : '' }}>Ditolak
                                 </option>
                             </select>
                         </div>
@@ -127,42 +178,36 @@
                                             title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('operator.turnitin.create', $d->id) }}"
-                                            class="btn btn-sm btn-success" title="Upload Hasil Turnitin">
-                                            <i class="fas fa-upload"></i>
-                                        </a>
-                                        {{-- allow operator to change status quickly --}}
-                                        <form action="{{ route('operator.updateStatus', $d->id) }}" method="POST"
-                                            class="d-inline">
-                                            @csrf
-                                            @method('PATCH')
-                                            <select name="status" onchange="this.form.submit()"
-                                                class="btn btn-primary dropdown-toggle">
-                                                <option class="dropdown-item" value="Pending"
-                                                    {{ $d->status == 'Pending' ? 'selected' : '' }}>
-                                                    Pending</option>
-                                                <option class="dropdown-item" value="Diproses"
-                                                    {{ $d->status == 'Diproses' ? 'selected' : '' }}>
-                                                    Diproses
-                                                </option>
-                                                <option class="dropdown-item" value="Sudah Dicek"
-                                                    {{ $d->status == 'Sudah Dicek' ? 'selected' : '' }}>
-                                                    Sudah Dicek
-                                                </option>
-                                                <option class="dropdown-item" value="Selesai"
-                                                    {{ $d->status == 'Selesai' ? 'selected' : '' }}>
-                                                    Selesai</option>
-                                                <option class="dropdown-item" value="Ditolak"
-                                                    {{ $d->status == 'Ditolak' ? 'selected' : '' }}>
-                                                    Ditolak</option>
-                                            </select>
-                                        </form>
+
+                                        @if($d->status == 'Pending' && is_null($d->assigned_operator_id))
+                                            <form action="{{ route('operator.dokumen.claim', $d->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-warning" title="Ambil Dokumen Ini Untuk Dikerjakan" onclick="return confirm('Anda yakin ingin mengambil alih pengecekan dokumen ini?')">
+                                                    <i class="fas fa-hand-paper"></i> Kerjakan
+                                                </button>
+                                            </form>
+                                        @elseif($d->status == 'Diproses' && $d->assigned_operator_id == Auth::id())
+                                            <a href="{{ route('operator.turnitin.create', $d->id) }}"
+                                                class="btn btn-sm btn-success" title="Upload Hasil Turnitin">
+                                                <i class="fas fa-upload"></i> Upload Turnitin
+                                            </a>
+                                            {{-- operator can optionally revert to pending --}}
+                                            <form action="{{ route('operator.updateStatus', $d->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="Pending">
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Batalkan Pengerjaan" onclick="return confirm('Apakah Anda yakin ingin melepas kembali dokumen ini ke antrean Pending?')">
+                                                    <i class="fas fa-times"></i> Batal Proses
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">
+                                <td colspan="9" class="text-center py-4 text-muted">
                                     <i class="fas fa-inbox"></i> Tidak ada dokumen yang tersedia.
                                 </td>
                             </tr>

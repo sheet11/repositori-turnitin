@@ -25,17 +25,23 @@ class OperatorController extends Controller
     }
 
     /**
-     * Update the status of a document (used by operator).
+     * Update status dokumen
      */
     public function updateStatus(Request $request, Dokumen $dokumen)
     {
-        $data = $request->validate([
-            'status' => 'required|in:Pending,Diproses,Sudah Dicek,Ditolak,Selesai',
+        $request->validate([
+            'status' => 'required|in:Pending,Diproses,Sudah Dicek,Ditolak,Selesai'
         ]);
+
+        $data = ['status' => $request->status];
+
+        // If returned to Pending, release the claim so other operators can take it
+        if ($request->status === 'Pending') {
+            $data['assigned_operator_id'] = null;
+        }
 
         $dokumen->update($data);
 
-        return redirect()->route('operator.dokumen.index')
-                         ->with('success', 'Status dokumen diperbarui.');
+        return back()->with('success', 'Status dokumen berhasil diperbarui!');
     }
 }

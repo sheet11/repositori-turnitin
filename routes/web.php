@@ -94,7 +94,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
 Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('/dashboard', [OperatorController::class, 'index'])->name('operator.dashboard');
+    Route::get('/dokumen/export', [OperatorDokumenController::class, 'export'])->name('operator.dokumen.export');
     Route::get('/dokumen', [OperatorDokumenController::class, 'index'])->name('operator.dokumen.index');
+    Route::get('/dokumen/riwayat', [OperatorDokumenController::class, 'riwayat'])->name('operator.dokumen.riwayat');
     Route::get('/dokumen/create', [OperatorDokumenController::class, 'create'])->name('operator.dokumen.create');
     Route::post('/dokumen', [OperatorDokumenController::class, 'store'])->name('operator.dokumen.store');
     Route::get('/dokumen/{dokumen}', [OperatorDokumenController::class, 'show'])->name('operator.dokumen.show');
@@ -102,6 +104,7 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::put('/dokumen/{dokumen}', [OperatorDokumenController::class, 'update'])->name('operator.dokumen.update');
     Route::delete('/dokumen/{dokumen}', [OperatorDokumenController::class, 'destroy'])->name('operator.dokumen.destroy');
     Route::patch('/dokumen/{dokumen}/status', [OperatorController::class, 'updateStatus'])->name('operator.updateStatus');
+    Route::post('/dokumen/{dokumen}/claim', [OperatorDokumenController::class, 'claim'])->name('operator.dokumen.claim');
     Route::get('/dokumen/download/{id}', [OperatorDokumenController::class, 'download'])->name('operator.dokumen.download');
     Route::get('/turnitin/create/{id}',[HasilTurnitinController::class,'create'])->name('operator.turnitin.create');
     Route::post('/turnitin',[HasilTurnitinController::class,'store'])->name('operator.turnitin.store');
@@ -141,6 +144,12 @@ Route::middleware(['auth'])->prefix('dosen')->group(function () {
     Route::put('/{dosen}', [DosenController::class, 'update'])->name('dosen.update');
     Route::delete('/{dosen}', [DosenController::class, 'destroy'])->name('dosen.destroy');
     Route::get('/{dosen}', [DosenController::class, 'show'])->name('dosen.show');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__ . '/auth.php';

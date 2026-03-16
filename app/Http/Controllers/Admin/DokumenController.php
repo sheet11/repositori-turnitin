@@ -18,10 +18,13 @@ class DokumenController extends Controller
     public function index(Request $request): View
     {
         $search = $request->query('search');
+        $tahun = $request->query('tahun');
+        $status = $request->query('status');
+
         $user = Auth::user();
 
         // start with base query
-        $query = Dokumen::query();
+        $query = Dokumen::with(['mahasiswa.programStudi', 'assignedOperator']);
 
         // mahasiswa only sees their own dokumen
         if ($user && optional($user->role)->nama_role === 'Mahasiswa') {
@@ -31,10 +34,20 @@ class DokumenController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('judul', 'like', "%{$search}%")
-                    ->orWhere('nim', 'like', "%{$search}%")
-                    ->orWhere('jenis_dokumen', 'like', "%{$search}%")
-                    ->orWhere('status', 'like', "%{$search}%");
+                  ->orWhere('jenis_dokumen', 'like', "%{$search}%")
+                  ->orWhereHas('mahasiswa', function ($mq) use ($search) {
+                      $mq->where('nim', 'like', "%{$search}%")
+                         ->orWhere('nama', 'like', "%{$search}%");
+                  });
             });
+        }
+
+        if ($tahun) {
+            $query->whereYear('created_at', $tahun);
+        }
+
+        if ($status) {
+            $query->where('status', $status);
         }
 
         // you can change to paginate() if you need pagination in the view

@@ -26,6 +26,7 @@ class Dokumen extends Model
         'tanggal_upload',
         'status',
         'user_id',
+        'assigned_operator_id',
     ];
 
     /**
@@ -61,5 +62,10 @@ class Dokumen extends Model
     public function mahasiswa()
     {
         return $this->belongsTo(Mahasiswa::class, 'user_id', 'user_id');
+    }
+
+    public function assignedOperator()
+    {
+        return $this->belongsTo(User::class, 'assigned_operator_id');
     }
 }

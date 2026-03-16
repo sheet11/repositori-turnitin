@@ -36,8 +36,17 @@ class HasilTurnitin extends Model
      *
      * @return array<string, string>
      */
+    protected $casts = [
+        'tanggal_cek' => 'datetime',
+    ];
+
     public function dokumen()
     {
         return $this->belongsTo(Dokumen::class);
+    }
+
+    public function operator()
+    {
+        return $this->belongsTo(User::class, 'operator_id');
     }
 }
