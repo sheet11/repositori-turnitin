@@ -103,28 +103,10 @@
             </div>
 
             <li class="nav-item">
-                @php
-                    use App\Models\Dokumen;
-                    $cekDokumen = \App\Models\Dokumen::where('user_id', auth()->id())
-                        ->where('status', '!=', 'Selesai')
-                        ->count();
-                    $cekpending = \App\Models\Dokumen::where('user_id', auth()->id())
-                        ->where('status', 'Pending')
-                        ->count();
-                    $d = Dokumen::where('user_id', Auth::id())->latest()->first();
-                @endphp
-
-                @if ((auth()->user()->role_id == 3 || auth()->user()->role_id == 4) && $cekDokumen > 0)
-                    <a class="nav-link" href="{{ route('mahasiswa.dokumen.create') }}">
-                        <i class="fas fa-fw fa-file-alt"></i>
-                        <span>Pengajuan</span>
-                    </a>
-                @elseif ((auth()->user()->role_id == 3 || auth()->user()->role_id == 4) && $cekpending > 0)
-                    <a class="nav-link" href="{{ route('mahasiswa.dokumen.show', $d->id) }}">
-                        <i class="fas fa-fw fa-file-alt"></i>
-                        <span>Pengajuan</span>
-                    </a>
-                @endif
+                <a class="nav-link" href="{{ route('mahasiswa.dokumen.create') }}">
+                    <i class="fas fa-fw fa-file-alt"></i>
+                    <span>Pengajuan</span>
+                </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('mahasiswa.dokumen.index') }}">
