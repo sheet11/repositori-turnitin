@@ -99,7 +99,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Menu
+                Menu Utama
             </div>
 
             <li class="nav-item">
@@ -108,18 +108,39 @@
                     <span>Dokumen</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('dokumen.index') }}">
-                    <i class="fas fa-fw fa-file-invoice"></i>
-                    <span>Riwayat Pengajuan</span></a>
-            </li>
+            
+            <!-- Only Admin can see this menu -->
+            @if(Auth::check() && Auth::user()->role_id == 1)
+                <!-- Divider -->
+                <hr class="sidebar-divider">
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('users.index') }}"><i class="fas fa-fw fa-users"></i><span>Management
-                        User</span></a>
-            </li>
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Manajemen & Data Master
+                </div>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('users.index') }}">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Manajemen User</span>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('program-studi.index') }}">
+                        <i class="fas fa-fw fa-university"></i>
+                        <span>Program Studi</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('log-aktivitas.index') }}">
+                        <i class="fas fa-fw fa-history"></i>
+                        <span>Log Aktivitas</span>
+                    </a>
+                </li>
+            @endif
+
         </ul>
         <!-- End of Sidebar -->
 
@@ -247,7 +268,7 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
+                                        <img class="rounded-circle" src="{{asset('img/undraw_profile_1.svg')}}" alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
@@ -258,7 +279,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg" alt="...">
+                                        <img class="rounded-circle" src="{{asset('img/undraw_profile_2.svg')}}" alt="...">
                                         <div class="status-indicator"></div>
                                     </div>
                                     <div>
@@ -269,7 +290,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg" alt="...">
+                                        <img class="rounded-circle" src="{{asset('img/undraw_profile_3.svg')}}" alt="...">
                                         <div class="status-indicator bg-warning"></div>
                                     </div>
                                     <div>
@@ -304,7 +325,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name
                                     }}</span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="{{asset('img/undraw_profile.svg')}}">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

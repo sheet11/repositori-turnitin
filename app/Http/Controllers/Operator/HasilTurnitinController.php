@@ -49,6 +49,13 @@ class HasilTurnitinController extends Controller
         HasilTurnitin::create($data);
 
         $dokumen->update(['status' => 'Sudah Dicek']);
+
+        \App\Models\LogAktivitas::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'Mengecek (Upload Hasil Turnitin) dokumen: ' . $dokumen->judul . ' dengan similarity ' . $data['similarity_index'] . '%',
+            'waktu' => now()
+        ]);
+
         // =============================
         // Kirim Email ke Mahasiswa
         // =============================

@@ -22,7 +22,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('dokumen.update', $dokumen->id) }}" method="POST">
+                <form action="{{ route('mahasiswa.dokumen.update', $dokumen->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -88,7 +88,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save"></i> Simpan Perubahan
                         </button>
-                        <a href="{{ route('dokumen.show', $dokumen->id) }}" class="btn btn-secondary">
+                        <a href="{{ route('mahasiswa.dokumen.show', $dokumen->id) }}" class="btn btn-secondary">
                             <i class="fas fa-times"></i> Batal
                         </a>
                     </div>

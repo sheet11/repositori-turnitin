@@ -186,6 +186,12 @@ class DokumenController extends Controller
 
         $dokumen->update($data);
 
+        \App\Models\LogAktivitas::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'Memperbarui status dokumen ' . $dokumen->judul . ' menjadi ' . $data['status'],
+            'waktu' => now()
+        ]);
+
         return redirect()->route('operator.dokumen.index')
             ->with('success', 'Data dokumen diperbarui.');
     }
@@ -216,6 +222,12 @@ class DokumenController extends Controller
         $dokumen->update([
             'assigned_operator_id' => Auth::id(),
             'status' => 'Diproses'
+        ]);
+
+        \App\Models\LogAktivitas::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'Mengambil alih dokumen: ' . $dokumen->judul,
+            'waktu' => now()
         ]);
 
         return redirect()->route('operator.dokumen.index')

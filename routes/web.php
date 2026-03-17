@@ -15,6 +15,7 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\Operator\HasilTurnitinController;
 use App\Http\Controllers\LogAktivitasController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProgramStudiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,9 +67,13 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/dokumen', [DokumenController::class, 'index'])->name('admin.dokumen.index');
 
-    Route::resource('dokumen', DokumenController::class);
+    Route::resource('dokumen', DokumenController::class)->parameters([
+        'dokumen' => 'dokumen'
+    ]);
 
     Route::resource('dosen', DosenController::class);
+
+    Route::resource('program-studi', ProgramStudiController::class);
 
     Route::resource('hasil-turnitin', HasilTurnitinController::class);
 

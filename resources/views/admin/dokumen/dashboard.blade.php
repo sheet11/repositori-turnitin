@@ -91,65 +91,56 @@
                     </tr>
                 </tfoot>
                 <tbody>
-                    @if ($dokumen->count() > 0)
-                        @foreach ($dokumen as $d)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $d->nim }}</td>
-                                <td>{{ $d->mahasiswa->nama }}</td>
-                                <td>{{ optional(optional($d->mahasiswa)->programStudi)->nama_prodi ?? '-' }}</td>
-                                <td>{{ $d->judul }}</td>
-                                <td>{{ $d->jenis_dokumen }}</td>
-                                <td>
-                                    @if ($d->assigned_operator_id)
-                                        {{ $d->assignedOperator->name }}
-                                    @else
-                                        <span class="text-muted italic">Belum Diambil</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($d->status == 'Pending')
-                                        <span class="badge bg-warning text-dark">{{ $d->status }}</span>
-                                    @elseif($d->status == 'Diproses')
-                                        <span class="badge bg-info text-white">{{ $d->status }}</span>
-                                    @elseif($d->status == 'Selesai')
-                                        <span class="badge bg-success text-white">{{ $d->status }}</span>
-                                    @elseif($d->status == 'Ditolak')
-                                        <span class="badge bg-danger text-white">{{ $d->status }}</span>
-                                    @else
-                                        <span class="badge bg-secondary text-white">{{ $d->status }}</span>
-                                    @endif
-                                </td>
-                                <td>{{ $d->created_at->format('d-m-Y') }}</td>
-                                <td>
-                                    <a href="{{ route('dokumen.show', $d->id) }}" class="btn btn-sm btn-info"
-                                        title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('dokumen.edit', $d->id) }}" class="btn btn-sm btn-warning"
-                                        title="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('dokumen.destroy', $d->id) }}" method="POST"
-                                        style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus"
-                                            onclick="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @else
+                    @foreach ($dokumen as $d)
                         <tr>
-                            <td colspan="10" class="text-center py-4 text-muted">
-                                <i class="fas fa-inbox"></i> Tidak ada dokumen yang tersedia.
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $d->nim }}</td>
+                            <td>{{ optional($d->mahasiswa)->nama ?? '-' }}</td>
+                            <td>{{ optional(optional($d->mahasiswa)->programStudi)->nama_prodi ?? '-' }}</td>
+                            <td>{{ $d->judul }}</td>
+                            <td>{{ $d->jenis_dokumen }}</td>
+                            <td>
+                                @if ($d->assigned_operator_id)
+                                    {{ $d->assignedOperator->name }}
+                                @else
+                                    <span class="text-muted italic">Belum Diambil</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($d->status == 'Pending')
+                                    <span class="badge badge-warning">{{ $d->status }}</span>
+                                @elseif($d->status == 'Diproses' || $d->status == 'Proses')
+                                    <span class="badge badge-info">{{ $d->status }}</span>
+                                @elseif($d->status == 'Selesai' || $d->status == 'Lolos')
+                                    <span class="badge badge-success">{{ $d->status }}</span>
+                                @elseif($d->status == 'Ditolak' || $d->status == 'Revisi')
+                                    <span class="badge badge-danger">{{ $d->status }}</span>
+                                @else
+                                    <span class="badge badge-secondary">{{ $d->status }}</span>
+                                @endif
+                            </td>
+                            <td>{{ $d->created_at->format('d-m-Y') }}</td>
+                            <td>
+                                <a href="{{ route('dokumen.show', $d->id) }}" class="btn btn-sm btn-info"
+                                    title="Lihat Detail">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('dokumen.edit', $d->id) }}" class="btn btn-sm btn-warning"
+                                    title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ route('dokumen.destroy', $d->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
-                    @endif
-
+                    @endforeach
                 </tbody>
             </table>
         </div>

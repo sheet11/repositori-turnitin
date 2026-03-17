@@ -51,7 +51,7 @@ class DokumenController extends Controller
         }
 
         // you can change to paginate() if you need pagination in the view
-        $dokumen = $query->orderBy('created_at', 'desc')->paginate(10);
+        $dokumen = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.dokumen.dashboard', compact('dokumen'));
     }
@@ -89,6 +89,12 @@ class DokumenController extends Controller
 
         Dokumen::create($data);
 
+        \App\Models\LogAktivitas::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'Admin mengunggah dokumen baru: ' . $data['judul'],
+            'waktu' => now()
+        ]);
+
         return redirect()->route('admin.dokumen.dashboard')
             ->with('success', 'Dokumen berhasil ditambahkan.');
     }
@@ -122,6 +128,12 @@ class DokumenController extends Controller
         ]);
 
         $dokumen->update($data);
+
+        \App\Models\LogAktivitas::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'Admin mengubah status dokumen ' . $dokumen->judul . ' menjadi ' . $data['status'],
+            'waktu' => now()
+        ]);
 
         return redirect()->route('admin.dokumen.dashboard')
             ->with('success', 'Data dokumen diperbarui.');

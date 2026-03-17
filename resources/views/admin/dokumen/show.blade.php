@@ -113,6 +113,7 @@
                     <p><strong>Similarity Score:</strong> {{ $dokumen->hasilTurnitin->similarity_index }}%</p>
                     <p><strong>Tanggal Cek:</strong> {{ $dokumen->hasilTurnitin->tanggal_cek->format('d-m-Y H:i:s') }}
                     </p>
+                    <p><strong>Diunggah Oleh:</strong> {{ optional($dokumen->hasilTurnitin->operator)->name ?? '-' }}</p>
                     @if($dokumen->hasilTurnitin->file_laporan)
                     <p>
                         <a href="{{ Storage::url($dokumen->hasilTurnitin->file_laporan) }}" target="_blank"

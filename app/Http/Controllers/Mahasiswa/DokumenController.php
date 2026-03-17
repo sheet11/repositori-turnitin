@@ -75,6 +75,12 @@ class DokumenController extends Controller
 
         Dokumen::create($data);
 
+        \App\Models\LogAktivitas::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'Mengunggah dokumen baru: ' . $data['judul'],
+            'waktu' => now()
+        ]);
+
         return redirect()->route('mahasiswa.dokumen.index')
             ->with('success', 'Dokumen berhasil ditambahkan.');
     }
