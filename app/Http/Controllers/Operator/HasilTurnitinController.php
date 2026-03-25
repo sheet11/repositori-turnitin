@@ -21,6 +21,8 @@ class HasilTurnitinController extends Controller
 
     public function store(Request $request)
     {
+        set_time_limit(300); // Extend execution time for large PDF uploads or slow SMTP
+
         $dokumen = Dokumen::findOrFail($request->dokumen_id);
         $data = $request->validate([
             'dokumen_id' => 'required',
@@ -67,10 +69,16 @@ class HasilTurnitinController extends Controller
             'similarity_index' => $data['similarity_index']
         ];
 
-        Mail::to($user->email)->send(new HasilTurnitinMail($emailData));
+        try {
+            Mail::to($user->email)->send(new HasilTurnitinMail($emailData));
+            $msg = 'Hasil Turnitin berhasil diupload & email terkirim';
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Email Turnitin gagal terkirim: ' . $e->getMessage());
+            $msg = 'Hasil Turnitin berhasil diupload, namun server gagal mengirim email notifikasi ke mahasiswa.';
+        }
 
         return redirect()->route('operator.dokumen.index')
-            ->with('success', 'Hasil Turnitin berhasil diupload & email terkirim');
+            ->with('success', $msg);
     }
     public function download($id)
     {
