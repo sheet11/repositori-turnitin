@@ -40,8 +40,8 @@
 
                                         <div class="form-group">
 
-                                            <input type="email" name="email" class="form-control form-control-user"
-                                                placeholder="Email" value="{{ old('email') }}" required>
+                                            <input type="text" name="email" class="form-control form-control-user"
+                                                placeholder="Email / NIM" value="{{ old('email') }}" required>
 
                                             @error('email')
                                             <span class="text-danger">{{ $message }}</span>
