@@ -93,12 +93,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="bukti_bayar" class="form-label">Bukti Pembayaran (Opsional)</label>
+                        <label for="bukti_bayar" class="form-label">Bukti Pembayaran <span class="text-danger">*</span></label>
                         <input type="file" class="form-control @error('bukti_bayar') is-invalid @enderror"
-                            id="bukti_bayar" name="bukti_bayar" accept=".pdf,.jpg,.jpeg,.png">
+                            id="bukti_bayar" name="bukti_bayar" accept=".pdf,.jpg,.jpeg,.png" required>
                         @error('bukti_bayar')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
+                        <div class="alert alert-info mt-2 pb-2 pt-2 mb-2">
+                            <i class="fas fa-info-circle"></i> <strong>Info Pembayaran:</strong> Silakan transfer biaya cek Turnitin ke rekening:<br>
+                            <strong>Bank BSI 7632153001 a/n RPL 016 POLTEKKES BKL UTK</strong>
+                        </div>
                         <small class="form-text text-muted">Format yang diterima: PDF, JPG, JPEG, PNG. Ukuran maksimal:
                             5MB</small>
                     </div>

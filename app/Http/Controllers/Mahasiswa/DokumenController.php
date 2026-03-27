@@ -59,8 +59,8 @@ class DokumenController extends Controller
             'judul' => 'required|string|max:255',
             'jenis_dokumen' => 'required|in:Skripsi,Jurnal,Proposal,KTI',
             'nim' => 'required|string|max:50',
-            'file_asli' => 'required|file',
-            'bukti_bayar' => 'nullable|file',
+            'file_asli' => 'required|file|mimes:pdf,doc,docx|max:25600',
+            'bukti_bayar' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
         // handle file uploads as needed
