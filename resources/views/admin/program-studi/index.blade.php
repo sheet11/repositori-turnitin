@@ -57,6 +57,7 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
     $(document).ready(function() {
         $('#prodiTable').DataTable({
@@ -67,5 +68,6 @@
         });
     });
 </script>
+@endpush
 
 @endsection

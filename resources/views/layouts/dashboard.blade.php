@@ -53,7 +53,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Sistem Repositori Turnitin</title>
+    <title>Similarity Monitoring</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -81,7 +81,7 @@
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
-                <div class="sidebar-brand-text mx-3">Repo Turnitin <sup>2</sup></div>
+                <div class="sidebar-brand-text mx-3">SIMON <sup>2</sup></div>
             </a>
 
             <!-- Divider -->
@@ -122,7 +122,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('users.index') }}">
                         <i class="fas fa-fw fa-users"></i>
-                        <span>Manajemen User</span>
+                        <span>Manajemen Admin/Operator</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('mahasiswa.index') }}">
+                        <i class="fas fa-fw fa-user-graduate"></i>
+                        <span>Manajemen Mahasiswa</span>
                     </a>
                 </li>
                 
@@ -439,6 +446,7 @@
     <!-- Page level custom scripts -->
     <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
 
+    @stack('scripts')
 </body>
 
 </html>

@@ -65,7 +65,22 @@ class DokumenController extends Controller
 
         // handle file uploads as needed
         if ($request->hasFile('file_asli')) {
-            $data['file_asli'] = $request->file('file_asli')->store('dokumen','public');
+            $file = $request->file('file_asli');
+            $extension = $file->getClientOriginalExtension();
+            $mahasiswa = \App\Models\Mahasiswa::with('programStudi')->where('user_id', Auth::id())->first();
+            
+            if ($mahasiswa) {
+                // Sanitize parameters for safe filename
+                $nama = preg_replace('/[^A-Za-z0-9\-]/', '_', $mahasiswa->nama);
+                $prodi = preg_replace('/[^A-Za-z0-9\-]/', '_', optional($mahasiswa->programStudi)->nama_prodi ?? 'Prodi');
+                $tanggal = date('Y-m-d');
+                
+                $filename = "{$mahasiswa->nim}_{$nama}_{$prodi}_{$tanggal}.{$extension}";
+                $data['file_asli'] = $file->storeAs('dokumen', $filename, 'public');
+            } else {
+                // fallback
+                $data['file_asli'] = $file->store('dokumen', 'public');
+            }
         }
         if ($request->hasFile('bukti_bayar')) {
             $data['bukti_bayar'] = $request->file('bukti_bayar')->store('bukti','public');

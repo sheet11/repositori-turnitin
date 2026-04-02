@@ -13,7 +13,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::with('role')->get();
+        $users = User::with('role')->where('role_id', '!=', 3)->get();
         return view('admin.users.index', compact('users'));
     }
 
@@ -75,47 +75,6 @@ class UserController extends Controller
         User::findOrFail($id)->delete();
 
         return redirect()->route('users.index')->with('success','User berhasil dihapus');
-    }
-
-    public function import(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv|max:2048'
-        ]);
-
-        $file = $request->file('file');
-        $extension = $file->getClientOriginalExtension();
-        $rows = \Spatie\SimpleExcel\SimpleExcelReader::create($file->path(), $extension)->getRows();
-
-        $rows->each(function(array $row) {
-            // expected columns in excel: nim, nama, email, program_studi_id, tahun_masuk
-            $nim = trim($row['nim'] ?? '');
-            $email = trim($row['email'] ?? '');
-            
-            if (!$nim || !$email) return;
-
-            // skip if user already exists
-            if (User::where('email', $email)->exists() || \App\Models\Mahasiswa::where('nim', $nim)->exists()) {
-                return;
-            }
-            
-            $user = User::create([
-                'name' => trim($row['nama'] ?? $nim),
-                'email' => $email,
-                'password' => Hash::make(trim($row['password'] ?? 'password123')),
-                'role_id' => 3 // Role 3 is Mahasiswa based on routes
-            ]);
-
-            \App\Models\Mahasiswa::create([
-                'nim' => $nim,
-                'nama' => trim($row['nama'] ?? $nim),
-                'user_id' => $user->id,
-                'program_studi_id' => !empty($row['program_studi_id']) ? $row['program_studi_id'] : (\App\Models\ProgramStudi::first()->id ?? 1),
-                'tahun_masuk' => trim($row['tahun_masuk'] ?? date('Y'))
-            ]);
-        });
-
-        return redirect()->route('users.index')->with('success','Data Mahasiswa berhasil diimport dari Excel');
     }
 
 }

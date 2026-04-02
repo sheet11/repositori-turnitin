@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Sistem Repositori Turnitin</title>
+    <title>Similarity Monitoring</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -332,7 +332,7 @@
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <i class="fas fa-layer-group me-2 text-primary"></i>
-                Arsitin
+                SIMON
             </a>
             
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -488,7 +488,7 @@
                 <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                     <a class="navbar-brand d-inline-flex align-items-center text-decoration-none" href="#">
                         <i class="fas fa-layer-group me-2 text-primary fs-5"></i>
-                        <span class="fs-5 fw-bold text-dark">Arsitin</span>
+                        <span class="fs-5 fw-bold text-dark">SIMON</span>
                     </a>
                 </div>
                 <div class="col-md-6 text-center text-md-end text-muted small">

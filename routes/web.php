@@ -15,6 +15,7 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\Operator\HasilTurnitinController;
 use App\Http\Controllers\LogAktivitasController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\MahasiswaController as AdminMahasiswaController;
 use App\Http\Controllers\Admin\ProgramStudiController;
 
 /*
@@ -89,7 +90,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
     Route::delete('/users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
 
-    Route::post('/users/import', [UserController::class, 'import'])->name('users.import');
+    Route::resource('mahasiswa', AdminMahasiswaController::class);
+    Route::post('/mahasiswa/import', [AdminMahasiswaController::class, 'import'])->name('mahasiswa.import');
     
 });
 

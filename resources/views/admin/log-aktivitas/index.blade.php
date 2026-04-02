@@ -48,6 +48,7 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
     $(document).ready(function() {
         $('#logTable').DataTable({
@@ -59,5 +60,6 @@
         });
     });
 </script>
+@endpush
 
 @endsection

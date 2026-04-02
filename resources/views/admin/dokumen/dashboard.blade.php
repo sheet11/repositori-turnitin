@@ -147,6 +147,7 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
     $(document).ready(function() {
         $('#dokumenTable').DataTable({
@@ -158,5 +159,6 @@
         });
     });
 </script>
+@endpush
 
 @endsection

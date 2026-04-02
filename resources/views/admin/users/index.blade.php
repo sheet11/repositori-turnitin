@@ -7,9 +7,6 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">User Management</h1>
         <div>
-            <button type="button" class="btn btn-success shadow-sm me-2" data-toggle="modal" data-target="#importModal">
-                <i class="fas fa-file-excel"></i> Import Mahasiswa
-            </button>
             <a href="{{ route('users.create') }}" class="btn btn-primary shadow-sm">
                 <i class="fas fa-plus"></i> Tambah User
             </a>
@@ -77,6 +74,7 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
     $(document).ready(function() {
         $('#usersTable').DataTable({
@@ -87,41 +85,8 @@
         });
     });
 </script>
+@endpush
 
-</div>
-
-<!-- Modal Import -->
-<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="importModalLabel">Import Data Mahasiswa</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form action="{{ route('users.import') }}" method="POST" enctype="multipart/form-data">
-          @csrf
-          <div class="modal-body">
-              <div class="mb-3">
-                  <label for="file" class="form-label">Pilih File Excel / CSV</label>
-                  <input class="form-control" type="file" id="file" name="file" accept=".xlsx,.xls,.csv" required>
-                  <div class="form-text mt-2">
-                      Kolom yang dibutuhkan: <strong>nim, nama, email, program_studi_id, tahun_masuk (opsional), password (opsional)</strong>
-                      <br><br>
-                      <a href="{{ asset('template_mahasiswa.xlsx') }}" class="btn btn-sm btn-info text-white" download>
-                          <i class="fas fa-file-excel"></i> Download Template Excel
-                      </a>
-                  </div>
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-              <button type="submit" class="btn btn-success">Import Data</button>
-          </div>
-      </form>
-    </div>
-  </div>
 </div>
 
 @endsection
