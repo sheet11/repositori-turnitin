@@ -48,7 +48,7 @@
                             <td>{{ $m->nim }}</td>
                             <td>{{ $m->nama }}</td>
                             <td>{{ $m->user->email ?? '-' }}</td>
-                            <td>{{ $m->programStudi->nama_program_studi ?? '-' }}</td>
+                            <td>{{ $m->programStudi->nama_prodi ?? '-' }}</td>
                             <td>{{ $m->tahun_masuk }}</td>
                             <td>
                                 <a href="{{ route('mahasiswa.edit',$m->id) }}" class="btn btn-warning btn-sm" title="Edit">
