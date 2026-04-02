@@ -136,20 +136,41 @@ class MahasiswaController extends Controller
                 return;
             }
             
-            $user = User::create([
-                'name' => trim($row['nama'] ?? $nim),
-                'email' => $email,
-                'password' => Hash::make(trim($row['password'] ?? 'password123')),
-                'role_id' => 3 // Role 3 is Mahasiswa based on routes
-            ]);
+            DB::beginTransaction();
+            try {
+                $user = User::create([
+                    'name' => trim($row['nama'] ?? $nim),
+                    'email' => $email,
+                    'password' => Hash::make(trim($row['password'] ?? 'password123')),
+                    'role_id' => 3 // Role 3 is Mahasiswa based on routes
+                ]);
 
-            \App\Models\Mahasiswa::create([
-                'nim' => $nim,
-                'nama' => trim($row['nama'] ?? $nim),
-                'user_id' => $user->id,
-                'program_studi_id' => !empty($row['program_studi_id']) ? $row['program_studi_id'] : (\App\Models\ProgramStudi::first()->id ?? 1),
-                'tahun_masuk' => trim($row['tahun_masuk'] ?? date('Y'))
-            ]);
+                // Validate if program_studi_id exists in the database
+                $program_studi_id = null;
+                if (!empty($row['program_studi_id'])) {
+                    if (\App\Models\ProgramStudi::where('id', $row['program_studi_id'])->exists()) {
+                        $program_studi_id = $row['program_studi_id'];
+                    }
+                }
+                
+                // Fallback to first program studi if not valid or empty
+                if (!$program_studi_id) {
+                    $program_studi_id = \App\Models\ProgramStudi::first()->id ?? 1;
+                }
+
+                \App\Models\Mahasiswa::create([
+                    'nim' => $nim,
+                    'nama' => trim($row['nama'] ?? $nim),
+                    'user_id' => $user->id,
+                    'program_studi_id' => $program_studi_id,
+                    'tahun_masuk' => trim($row['tahun_masuk'] ?? date('Y'))
+                ]);
+
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                // Optionally log the error: \Log::error('Import error for NIM '.$nim.': '.$e->getMessage());
+            }
         });
 
         return redirect()->route('mahasiswa.index')->with('success','Data Mahasiswa berhasil diimport dari Excel');
