@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Dokumen;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
         if(config('app.env') === 'production') {
             URL::forceScheme('https');
         }
-            
+
         View::composer('layouts.operator', function ($view) {
             $pendingCount = Dokumen::where('status', 'Pending')
                 ->whereNull('assigned_operator_id')
