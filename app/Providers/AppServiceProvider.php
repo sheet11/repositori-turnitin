@@ -22,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if(config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
+            
         View::composer('layouts.operator', function ($view) {
             $pendingCount = Dokumen::where('status', 'Pending')
                 ->whereNull('assigned_operator_id')
