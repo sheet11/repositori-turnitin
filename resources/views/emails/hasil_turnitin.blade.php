@@ -26,7 +26,7 @@
                     <tr>
                         <td style="padding:30px;">
                             <p style="font-size:14px; color:#333333; margin-top:0;">
-                                Yth. Bapak/Ibu/Saudara <b>{{ $data['nama'] }}</b>,
+                                Yth. Saudara <b>{{ $data['nama'] }}</b>,
                             </p>
 
                             <p style="font-size:14px; color:#333333; line-height:1.6;">
@@ -56,7 +56,7 @@
                             </p>
 
                             <p style="text-align:center; margin:30px 0;">
-                                <a href="{{ $data['link_login'] ?? '#' }}"
+                                <a href="http://180.250.37.238:8083/login" target="_blank"
                                    style="background-color:#0b5394; color:#ffffff; text-decoration:none; padding:12px 28px; border-radius:4px; font-size:14px; font-weight:bold; display:inline-block;">
                                     Lihat Laporan Lengkap
                                 </a>
