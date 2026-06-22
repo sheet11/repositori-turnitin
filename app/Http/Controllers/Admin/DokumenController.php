@@ -144,12 +144,32 @@ class DokumenController extends Controller
      */
     public function destroy(Dokumen $dokumen)
     {
-        $dokumen->delete();
-        if ($dokumen->bukti_bayar) {
-            Storage::delete($dokumen->bukti_bayar);
+        // Delete related HasilTurnitin record first (foreign key constraint)
+        if ($dokumen->hasilTurnitin) {
+            if ($dokumen->hasilTurnitin->file_laporan) {
+                Storage::disk('public')->delete($dokumen->hasilTurnitin->file_laporan);
+            }
+            $dokumen->hasilTurnitin->delete();
         }
 
+        // Delete associated files
+        if ($dokumen->file_asli) {
+            Storage::disk('public')->delete($dokumen->file_asli);
+        }
+        if ($dokumen->bukti_bayar) {
+            Storage::disk('public')->delete($dokumen->bukti_bayar);
+        }
+
+        $judul = $dokumen->judul;
+        $dokumen->delete();
+
+        \App\Models\LogAktivitas::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'Admin menghapus dokumen: ' . $judul,
+            'waktu' => now()
+        ]);
+
         return redirect()->route('admin.dokumen.dashboard')
-            ->with('success', 'Dokumen dihapus.');
+            ->with('success', 'Dokumen berhasil dihapus.');
     }
 }
