@@ -95,7 +95,7 @@ class DokumenController extends Controller
             'waktu' => now()
         ]);
 
-        return redirect()->route('admin.dokumen.dashboard')
+        return redirect()->route('dokumen.index')
             ->with('success', 'Dokumen berhasil ditambahkan.');
     }
 
@@ -135,7 +135,7 @@ class DokumenController extends Controller
             'waktu' => now()
         ]);
 
-        return redirect()->route('admin.dokumen.dashboard')
+        return redirect()->route('dokumen.index')
             ->with('success', 'Data dokumen diperbarui.');
     }
 
@@ -169,7 +169,7 @@ class DokumenController extends Controller
             'waktu' => now()
         ]);
 
-        return redirect()->route('admin.dokumen.dashboard')
+        return redirect()->route('dokumen.index')
             ->with('success', 'Dokumen berhasil dihapus.');
     }
 }

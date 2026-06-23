@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dosen;
 
 use Illuminate\Http\Request;
 use App\Models\Dokumen;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+
 
 class DosenController extends Controller
 {

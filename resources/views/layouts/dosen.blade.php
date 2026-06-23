@@ -118,7 +118,7 @@
                         <span>Pengajuan</span>
                     </a>
                 @elseif ((auth()->user()->role_id == 3 || auth()->user()->role_id == 4) && $cekpending > 0)
-                    <a class="nav-link" href="{{ route('dokumen.show') }}">
+                    <a class="nav-link" href="{{ route('dokumen.show', \App\Models\Dokumen::where('user_id', auth()->id())->where('status', 'Pending')->first()) }}">
                         <i class="fas fa-fw fa-file-alt"></i>
                         <span>Pengajuan ({{ $cekpending }})</span>
                     </a>

@@ -11,7 +11,7 @@ use App\Http\Controllers\Mahasiswa\DokumenController as MahasiswaDokumenControll
 use App\Http\Controllers\Operator\DokumenController as OperatorDokumenController;
 use App\Http\Controllers\Dosen\DokumenController as DosenDokumenController;
 use App\Http\Controllers\Operator\OperatorController;
-use App\Http\Controllers\DosenController;
+use App\Http\Controllers\Dosen\DosenController;
 use App\Http\Controllers\Operator\HasilTurnitinController;
 use App\Http\Controllers\LogAktivitasController;
 use App\Http\Controllers\Admin\UserController;
@@ -147,12 +147,12 @@ Route::middleware(['auth'])->prefix('mahasiswa')->group(function () {
 
 Route::middleware(['auth'])->prefix('dosen')->group(function () {
     Route::get('/', [DosenController::class, 'index'])->name('dosen.index');
-    Route::get('/create', [DosenController::class, 'create'])->name('dosen.create');
-    Route::post('/', [DosenController::class, 'store'])->name('dosen.store');
-    Route::get('/{dosen}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
-    Route::put('/{dosen}', [DosenController::class, 'update'])->name('dosen.update');
-    Route::delete('/{dosen}', [DosenController::class, 'destroy'])->name('dosen.destroy');
-    Route::get('/{dosen}', [DosenController::class, 'show'])->name('dosen.show');
+    Route::get('/create', [DosenDokumenController::class, 'create'])->name('dosen.create');
+    Route::post('/', [DosenDokumenController::class, 'store'])->name('dosen.store');
+    Route::get('/{dosen}/edit', [DosenDokumenController::class, 'edit'])->name('dosen.edit');
+    Route::put('/{dosen}', [DosenDokumenController::class, 'update'])->name('dosen.update');
+    Route::delete('/{dosen}', [DosenDokumenController::class, 'destroy'])->name('dosen.destroy');
+    Route::get('/{dosen}', [DosenDokumenController::class, 'show'])->name('dosen.show');
 });
 
 Route::middleware('auth')->group(function () {
