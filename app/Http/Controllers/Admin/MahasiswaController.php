@@ -12,10 +12,46 @@ use Illuminate\Support\Facades\DB;
 
 class MahasiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $mahasiswa = Mahasiswa::with(['user', 'programStudi'])->get();
-        return view('admin.mahasiswa.index', compact('mahasiswa'));
+        $query = Mahasiswa::with(['user', 'programStudi']);
+
+        // Search filter (NIM, Nama, or Email)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('nim', 'like', "%{$search}%")
+                  ->orWhere('nama', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($qu) use ($search) {
+                      $qu->where('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Program Studi filter
+        if ($request->filled('program_studi')) {
+            $query->where('program_studi_id', $request->input('program_studi'));
+        }
+
+        // Tahun Masuk filter
+        if ($request->filled('tahun_masuk')) {
+            $query->where('tahun_masuk', $request->input('tahun_masuk'));
+        }
+
+        // Paginate results (15 per page)
+        $mahasiswa = $query->orderBy('nama', 'asc')->paginate(15)->withQueryString();
+
+        // Get all program studi for filter dropdown
+        $programStudis = ProgramStudi::orderBy('nama_prodi')->get();
+
+        // Get distinct entry years for filter dropdown
+        $tahunMasuks = Mahasiswa::select('tahun_masuk')
+            ->whereNotNull('tahun_masuk')
+            ->distinct()
+            ->orderBy('tahun_masuk', 'desc')
+            ->pluck('tahun_masuk');
+
+        return view('admin.mahasiswa.index', compact('mahasiswa', 'programStudis', 'tahunMasuks'));
     }
 
     public function create()

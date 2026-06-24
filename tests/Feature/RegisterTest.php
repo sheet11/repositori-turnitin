@@ -18,6 +18,7 @@ test('user can register as mahasiswa', function () {
         'role_id' => 3,
         'nim' => '12345678',
         'program_studi_id' => $programStudi->id,
+        'tahun_angkatan' => 2025,
         'password' => 'password123',
         'password_confirmation' => 'password123',
     ]);
@@ -28,12 +29,16 @@ test('user can register as mahasiswa', function () {
         'name' => 'Test Mahasiswa',
         'email' => 'mahasiswa@test.com',
         'role_id' => 3,
-        'mahasiswa_id' => '12345678',
     ]);
+
+    $user = User::where('email', 'mahasiswa@test.com')->first();
+    expect($user)->not->toBeNull();
 
     $this->assertDatabaseHas('mahasiswas', [
         'nim' => '12345678',
         'nama' => 'Test Mahasiswa',
         'program_studi_id' => $programStudi->id,
+        'tahun_masuk' => 2025,
+        'user_id' => $user->id,
     ]);
 });

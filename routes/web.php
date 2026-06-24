@@ -46,6 +46,9 @@ Route::get('/dashboard', function () {
                 return redirect()->route('operator.dashboard');
 
             case 3:
+                if ($user->is_first_login) {
+                    return redirect()->route('mahasiswa.first-login');
+                }
                 return redirect()->route('mahasiswa.dashboard');
 
             case 4:
@@ -127,16 +130,23 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
 */
 
 Route::middleware(['auth'])->prefix('mahasiswa')->group(function () {
-    Route::get('/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
-    Route::get('/dokumen', [MahasiswaDokumenController::class, 'index'])->name('mahasiswa.dokumen.index');
-    Route::get('/dokumen/create', [MahasiswaDokumenController::class, 'create'])->name('mahasiswa.dokumen.create');
-    Route::post('/dokumen', [MahasiswaDokumenController::class, 'store'])->name('mahasiswa.dokumen.store');
-    Route::get('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'show'])->name('mahasiswa.dokumen.show');
-    Route::get('/dokumen/{dokumen}/edit', [MahasiswaDokumenController::class, 'edit'])->name('mahasiswa.dokumen.edit');
-    Route::put('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'update'])->name('mahasiswa.dokumen.update');
-    Route::delete('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'destroy'])->name('mahasiswa.dokumen.destroy');
-    Route::get('/riwayat', [MahasiswaDokumenController::class, 'riwayat'])->name('mahasiswa.riwayat');
-    Route::get('/dokumen/download/{id}', [MahasiswaDokumenController::class, 'download'])->name('mahasiswa.dokumen.download');
+    // First login routes (no first_login_check middleware to avoid loop)
+    Route::get('/first-login', [App\Http\Controllers\Mahasiswa\FirstLoginController::class, 'show'])->name('mahasiswa.first-login');
+    Route::post('/first-login', [App\Http\Controllers\Mahasiswa\FirstLoginController::class, 'update'])->name('mahasiswa.first-login.update');
+
+    // Other routes protected by first_login_check middleware
+    Route::middleware(['first_login_check'])->group(function () {
+        Route::get('/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
+        Route::get('/dokumen', [MahasiswaDokumenController::class, 'index'])->name('mahasiswa.dokumen.index');
+        Route::get('/dokumen/create', [MahasiswaDokumenController::class, 'create'])->name('mahasiswa.dokumen.create');
+        Route::post('/dokumen', [MahasiswaDokumenController::class, 'store'])->name('mahasiswa.dokumen.store');
+        Route::get('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'show'])->name('mahasiswa.dokumen.show');
+        Route::get('/dokumen/{dokumen}/edit', [MahasiswaDokumenController::class, 'edit'])->name('mahasiswa.dokumen.edit');
+        Route::put('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'update'])->name('mahasiswa.dokumen.update');
+        Route::delete('/dokumen/{dokumen}', [MahasiswaDokumenController::class, 'destroy'])->name('mahasiswa.dokumen.destroy');
+        Route::get('/riwayat', [MahasiswaDokumenController::class, 'riwayat'])->name('mahasiswa.riwayat');
+        Route::get('/dokumen/download/{id}', [MahasiswaDokumenController::class, 'download'])->name('mahasiswa.dokumen.download');
+    });
 });
 
 /*

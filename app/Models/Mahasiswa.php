@@ -11,7 +11,8 @@ class Mahasiswa extends Model
         'nama',
         'program_studi_id',
         'tahun_masuk',
-        'user_id'
+        'user_id',
+        'whatsapp'
     ];
 
     protected $primaryKey = 'id';

@@ -36,6 +36,9 @@ class AuthenticatedSessionController extends Controller
             case 2: // Operator
                 return redirect()->route('operator.dashboard');
             case 3: // Mahasiswa
+                if ($user->is_first_login) {
+                    return redirect()->route('mahasiswa.first-login');
+                }
                 return redirect()->route('mahasiswa.dashboard');
             case 4: // Dosen
                 return redirect()->route('dosen.index');

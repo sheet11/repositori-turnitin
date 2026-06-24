@@ -11,10 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('mahasiswas', function (Blueprint $table) {
-            $table->dropPrimary(['nim']);
-            $table->id()->first();
-        });
+        if (\Illuminate\Support\Facades\DB::connection($this->getConnection())->getDriverName() === 'sqlite') {
+            Schema::dropIfExists('mahasiswas');
+            Schema::create('mahasiswas', function (Blueprint $table) {
+                $table->id();
+                $table->string('nim');
+                $table->string('nama');
+                $table->foreignId('program_studi_id')->constrained('program_studis');
+                $table->year('tahun_masuk')->nullable();
+                $table->timestamps();
+                $table->unsignedBigInteger('user_id')->nullable();
+                $table->foreign('user_id')->references('id')->on('users');
+            });
+        } else {
+            Schema::table('mahasiswas', function (Blueprint $table) {
+                $table->dropPrimary(['nim']);
+                $table->id()->first();
+            });
+        }
     }
 
     /**

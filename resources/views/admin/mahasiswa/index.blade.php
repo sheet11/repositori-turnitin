@@ -23,13 +23,70 @@
         </div>
     @endif
 
+    <!-- Filter Card -->
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
+        <div class="card-header py-3 bg-light">
+            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-filter"></i> Filter & Pencarian</h6>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('mahasiswa.index') }}" method="GET">
+                <div class="form-row align-items-end">
+                    <div class="form-group col-md-4 mb-3 mb-md-0">
+                        <label for="search" class="font-weight-bold text-gray-800">Cari Mahasiswa</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search" name="search" value="{{ request('search') }}" placeholder="Cari NIM, Nama, atau Email...">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-search"></i> Cari
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 mb-3 mb-md-0">
+                        <label for="program_studi" class="font-weight-bold text-gray-800">Program Studi</label>
+                        <select class="form-control" id="program_studi" name="program_studi" onchange="this.form.submit()">
+                            <option value="">Semua Program Studi</option>
+                            @foreach($programStudis as $prodi)
+                                <option value="{{ $prodi->id }}" {{ request('program_studi') == $prodi->id ? 'selected' : '' }}>
+                                    {{ $prodi->nama_prodi }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3 mb-3 mb-md-0">
+                        <label for="tahun_masuk" class="font-weight-bold text-gray-800">Tahun Masuk</label>
+                        <select class="form-control" id="tahun_masuk" name="tahun_masuk" onchange="this.form.submit()">
+                            <option value="">Semua Tahun Masuk</option>
+                            @foreach($tahunMasuks as $tahun)
+                                <option value="{{ $tahun }}" {{ request('tahun_masuk') == $tahun ? 'selected' : '' }}>
+                                    {{ $tahun }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2 mb-0">
+                        <a href="{{ route('mahasiswa.index') }}" class="btn btn-secondary btn-block">
+                            <i class="fas fa-undo"></i> Reset
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student List Card -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Daftar Mahasiswa</h6>
+            @if(request()->anyFilled(['search', 'program_studi', 'tahun_masuk']))
+                <span class="badge badge-info py-2 px-3">
+                    <i class="fas fa-filter"></i> Ditemukan {{ $mahasiswa->total() }} hasil pencarian
+                </span>
+            @endif
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-sm" id="mahasiswaTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-striped table-hover table-sm" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -42,9 +99,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($mahasiswa as $m)
+                        @forelse($mahasiswa as $m)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ ($mahasiswa->currentPage() - 1) * $mahasiswa->perPage() + $loop->iteration }}</td>
                             <td>{{ $m->nim }}</td>
                             <td>{{ $m->nama }}</td>
                             <td>{{ $m->user->email ?? '-' }}</td>
@@ -63,25 +120,33 @@
                                 </form>
                             </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                <i class="fas fa-info-circle fa-2x mb-2"></i>
+                                <p class="mb-0">Data mahasiswa tidak ditemukan.</p>
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Server-side Pagination Links -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4">
+                <div class="text-muted small mb-2 mb-md-0">
+                    Menampilkan {{ $mahasiswa->firstItem() ?? 0 }} sampai {{ $mahasiswa->lastItem() ?? 0 }} dari {{ $mahasiswa->total() }} mahasiswa
+                </div>
+                <div>
+                    {{ $mahasiswa->links('pagination::bootstrap-4') }}
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 @push('scripts')
-<script>
-    $(document).ready(function() {
-        $('#mahasiswaTable').DataTable({
-            pageLength: 10,
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json'
-            }
-        });
-    });
-</script>
+<!-- Client-side DataTable disabled to optimize performance with server-side pagination -->
 @endpush
 
 <!-- Modal Import -->
