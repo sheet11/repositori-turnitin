@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  simon:
+    build: .
+    container_name: simon-app
+    ports:
+      - "8083:8000"
+    volumes:
+      - .:/var/www
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      TZ: Asia/Jakarta
+
+  database:
+    image: mysql:8.0
+    container_name: simon-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: repositori_turnitin
+      MYSQL_USER: simonuser
+      MYSQL_PASSWORD: Simon123#
+    ports:
+      - "3308:3306"
+    volumes:
+      - simon_db:/var/lib/mysql
+
+volumes:
+  simon_db:
