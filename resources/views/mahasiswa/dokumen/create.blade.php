@@ -100,7 +100,7 @@
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                         <div class="alert alert-info mt-2 pb-2 pt-2 mb-2">
-                            <i class="fas fa-info-circle"></i> <strong>Info Pembayaran:</strong> Silakan transfer biaya cek Turnitin ke rekening:<br>
+                            <i class="fas fa-info-circle"></i> <strong>Info Pembayaran:</strong> Silakan transfer biaya cek Turnitin sebesar Rp 10.000,- per pengajuan ke rekening :<br>
                             <strong>Bank BSI 7632153001 a/n RPL 016 POLTEKKES BKL UTK</strong>
                         </div>
                         <small class="form-text text-muted">Format yang diterima: PDF, JPG, JPEG, PNG. Ukuran maksimal:
