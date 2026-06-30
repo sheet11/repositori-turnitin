@@ -2,10 +2,11 @@
 
 @section('content')
 
-<div class="max-w-4xl mx-auto">
-    <div class="d-flex justify-content-between align-items-center mb-6">
-        <h1 class="text-2xl font-bold">Detail Dokumen</h1>
-        <a href="{{ route('dokumen.index') }}" class="btn btn-secondary">
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 font-weight-bold text-gray-800">Detail Dokumen</h1>
+        <a href="{{ route('mahasiswa.dokumen.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
     </div>
@@ -114,6 +115,7 @@
             </div>
             @endif
 
+            @if (in_array($dokumen->status, ['Pending']))
             <div class="mt-4 d-flex gap-2">
                 <a href="{{ route('mahasiswa.dokumen.edit', $dokumen->id) }}" class="btn btn-warning">
                     <i class="fas fa-edit"></i> Edit
@@ -128,8 +130,10 @@
                     </button>
                 </form>
             </div>
+            @endif
         </div>
     </div>
+</div>
 </div>
 
 @endsection

@@ -105,6 +105,10 @@ class DokumenController extends Controller
      */
     public function show(Dokumen $dokumen): View
     {
+        if ($dokumen->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         return view('mahasiswa.dokumen.show', compact('dokumen'));
     }
 
@@ -113,6 +117,15 @@ class DokumenController extends Controller
      */
     public function edit(Dokumen $dokumen): View
     {
+        if ($dokumen->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (!in_array($dokumen->status, ['Pending', 'Ditolak'])) {
+            return redirect()->route('mahasiswa.dokumen.index')
+                ->with('error', 'Dokumen yang sedang diproses atau selesai tidak dapat diubah.');
+        }
+
         return view('mahasiswa.dokumen.edit', compact('dokumen'));
     }
 
@@ -121,17 +134,68 @@ class DokumenController extends Controller
      */
     public function update(Request $request, Dokumen $dokumen)
     {
+        if ($dokumen->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if (!in_array($dokumen->status, ['Pending', 'Ditolak'])) {
+            return redirect()->route('mahasiswa.dokumen.index')
+                ->with('error', 'Dokumen yang sedang diproses atau selesai tidak dapat diubah.');
+        }
+
         $data = $request->validate([
             'judul' => 'required|string|max:255',
             'jenis_dokumen' => 'required|in:Skripsi,Jurnal,Proposal,KTI',
-            'nim' => 'required|string|max:50',
-            'status' => 'required|in:Pending,Di Proses,Ditolak,Selesai',
+            'file_asli' => 'nullable|file|mimes:pdf,doc,docx|max:25600',
+            'bukti_bayar' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
+
+        // handle file uploads
+        if ($request->hasFile('file_asli')) {
+            // Delete old file
+            if ($dokumen->file_asli) {
+                Storage::disk('public')->delete($dokumen->file_asli);
+            }
+
+            $file = $request->file('file_asli');
+            $extension = $file->getClientOriginalExtension();
+            $mahasiswa = \App\Models\Mahasiswa::with('programStudi')->where('user_id', Auth::id())->first();
+            
+            if ($mahasiswa) {
+                $nama = preg_replace('/[^A-Za-z0-9\-]/', '_', $mahasiswa->nama);
+                $prodi = preg_replace('/[^A-Za-z0-9\-]/', '_', optional($mahasiswa->programStudi)->nama_prodi ?? 'Prodi');
+                $tanggal = date('Y-m-d');
+                
+                $filename = "{$mahasiswa->nim}_{$nama}_{$prodi}_{$tanggal}.{$extension}";
+                $data['file_asli'] = $file->storeAs('dokumen', $filename, 'public');
+            } else {
+                $data['file_asli'] = $file->store('dokumen', 'public');
+            }
+        }
+
+        if ($request->hasFile('bukti_bayar')) {
+            // Delete old file
+            if ($dokumen->bukti_bayar) {
+                Storage::disk('public')->delete($dokumen->bukti_bayar);
+            }
+            $data['bukti_bayar'] = $request->file('bukti_bayar')->store('bukti', 'public');
+        }
+
+        // Reset status to Pending if it was Ditolak
+        if ($dokumen->status === 'Ditolak') {
+            $data['status'] = 'Pending';
+        }
 
         $dokumen->update($data);
 
+        \App\Models\LogAktivitas::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'Memperbarui dokumen: ' . $dokumen->judul,
+            'waktu' => now()
+        ]);
+
         return redirect()->route('mahasiswa.dokumen.index')
-            ->with('success', 'Data dokumen diperbarui.');
+            ->with('success', 'Data dokumen berhasil diperbarui.');
     }
 
     /**
@@ -139,13 +203,31 @@ class DokumenController extends Controller
      */
     public function destroy(Dokumen $dokumen)
     {
-        $dokumen->delete();
-        if ($dokumen->bukti_bayar) {
-            Storage::delete($dokumen->bukti_bayar);
+        if ($dokumen->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
         }
 
+        if (!in_array($dokumen->status, ['Pending', 'Ditolak'])) {
+            return redirect()->route('mahasiswa.dokumen.index')
+                ->with('error', 'Dokumen yang sedang diproses atau selesai tidak dapat dihapus.');
+        }
+
+        $dokumen->delete();
+        if ($dokumen->file_asli) {
+            Storage::disk('public')->delete($dokumen->file_asli);
+        }
+        if ($dokumen->bukti_bayar) {
+            Storage::disk('public')->delete($dokumen->bukti_bayar);
+        }
+
+        \App\Models\LogAktivitas::create([
+            'user_id' => Auth::id(),
+            'aktivitas' => 'Menghapus dokumen: ' . $dokumen->judul,
+            'waktu' => now()
+        ]);
+
         return redirect()->route('mahasiswa.dokumen.index')
-            ->with('success', 'Dokumen dihapus.');
+            ->with('success', 'Dokumen berhasil dihapus.');
     }
 
         public function download($id)

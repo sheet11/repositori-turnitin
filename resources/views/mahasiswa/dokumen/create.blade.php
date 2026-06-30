@@ -1,14 +1,15 @@
 @extends('layouts.mahasiswa')
 
 @section('content')
-    <div class="max-w-2xl mx-auto">
-        <h1 class="text-2xl font-bold mb-6">Tambah Dokumen Baru</h1>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="h3 font-weight-bold text-gray-800 mb-4">Tambah Dokumen Baru</h1>
 
-        <div class="card shadow">
-            <div class="card-header py-3 bg-primary">
-                <h6 class="m-0 font-weight-bold text-white">Form Input Dokumen</h6>
-            </div>
-            <div class="card-body">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-primary">
+                    <h6 class="m-0 font-weight-bold text-white">Form Input Dokumen</h6>
+                </div>
+                <div class="card-body">
                 @if ($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <strong>Error!</strong> Harap memperbaiki error di bawah ini:
@@ -119,4 +120,5 @@
             </div>
         </div>
     </div>
+</div>
 @endsection

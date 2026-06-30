@@ -2,14 +2,15 @@
 
 @section('content')
 
-    <div class="max-w-2xl mx-auto">
-        <h1 class="text-2xl font-bold mb-6">Edit Dokumen</h1>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="h3 font-weight-bold text-gray-800 mb-4">Edit Dokumen</h1>
 
-        <div class="card shadow">
-            <div class="card-header py-3 bg-primary">
-                <h6 class="m-0 font-weight-bold text-white">Form Edit Dokumen</h6>
-            </div>
-            <div class="card-body">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-primary">
+                    <h6 class="m-0 font-weight-bold text-white">Form Edit Dokumen</h6>
+                </div>
+                <div class="card-body">
                 @if ($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <strong>Error!</strong> Harap memperbaiki error di bawah ini:
@@ -22,7 +23,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('mahasiswa.dokumen.update', $dokumen->id) }}" method="POST">
+                <form action="{{ route('mahasiswa.dokumen.update', $dokumen->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -68,23 +69,45 @@
                         @enderror
                     </div>
 
+                    <!-- File Asli -->
                     <div class="mb-3">
-                        <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('status') is-invalid @enderror" id="status"
-                            name="status" placeholder="Masukkan status dokumen"
-                            value="{{ old('status', $dokumen->status) }}" readonly>
-                        @error('status')
+                        <label for="file_asli" class="form-label">Unggah Ulang File Asli (Opsional)</label>
+                        <input type="file" class="form-control @error('file_asli') is-invalid @enderror" id="file_asli"
+                            name="file_asli" accept=".pdf,.doc,.docx">
+                        <small class="form-text text-muted">Format file: PDF, DOC, DOCX. Ukuran maks: 25MB. Kosongkan jika tidak ingin mengubah file.</small>
+                        @error('file_asli')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
+                        @if ($dokumen->file_asli)
+                            <div class="mt-2 text-xs">
+                                <span class="text-secondary font-weight-bold">File aktif saat ini:</span>
+                                <a href="{{ Storage::url($dokumen->file_asli) }}" target="_blank" class="text-primary font-weight-semibold">
+                                    <i class="fas fa-external-link-alt mr-1"></i> {{ basename($dokumen->file_asli) }}
+                                </a>
+                            </div>
+                        @endif
                     </div>
 
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i>
-                        <strong>File Asli:</strong> {{ $dokumen->file_asli ?? 'Belum ada file' }}<br>
-                        <strong>Bukti Pembayaran:</strong> {{ $dokumen->bukti_bayar ?? 'Belum ada file' }}
+                    <!-- Bukti Pembayaran -->
+                    <div class="mb-3">
+                        <label for="bukti_bayar" class="form-label">Unggah Ulang Bukti Pembayaran (Opsional)</label>
+                        <input type="file" class="form-control @error('bukti_bayar') is-invalid @enderror" id="bukti_bayar"
+                            name="bukti_bayar" accept=".pdf,.jpg,.jpeg,.png">
+                        <small class="form-text text-muted">Format file: PDF, JPG, JPEG, PNG. Ukuran maks: 5MB. Kosongkan jika tidak ingin mengubah bukti pembayaran.</small>
+                        @error('bukti_bayar')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                        @if ($dokumen->bukti_bayar)
+                            <div class="mt-2 text-xs">
+                                <span class="text-secondary font-weight-bold">Bukti pembayaran saat ini:</span>
+                                <a href="{{ Storage::url($dokumen->bukti_bayar) }}" target="_blank" class="text-primary font-weight-semibold">
+                                    <i class="fas fa-external-link-alt mr-1"></i> {{ basename($dokumen->bukti_bayar) }}
+                                </a>
+                            </div>
+                        @endif
                     </div>
 
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 mt-4">
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save"></i> Simpan Perubahan
                         </button>
@@ -96,5 +119,6 @@
             </div>
         </div>
     </div>
+</div>
 
 @endsection

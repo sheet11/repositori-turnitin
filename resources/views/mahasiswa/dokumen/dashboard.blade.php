@@ -22,40 +22,50 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dokumenTable" width="100%" cellspacing="0">
+            <table class="table table-bordered table-hover" id="dokumenTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>No.</th>
+                        <th class="d-none d-md-table-cell">No.</th>
                         <th>Judul</th>
-                        <th>Jenis</th>
-                        <th>Tanggal Ajuan</th>
-                        <th>Similarity Index</th>
-                        <th>Hasil Turnitin</th>
-                        <th>Tanggal Cek</th>
-                        <th>Aksi</th>
+                        <th class="d-none d-md-table-cell">Jenis</th>
+                        <th class="d-none d-md-table-cell">Tanggal Ajuan</th>
+                        <th class="text-center">Similarity Index</th>
+                        <th class="text-center">Hasil Turnitin</th>
+                        <th class="d-none d-md-table-cell">Tanggal Cek</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>No.</th>
+                        <th class="d-none d-md-table-cell">No.</th>
                         <th>Judul</th>
-                        <th>Jenis</th>
-                        <th>Tanggal Ajuan</th>
-                        <th>Similarity Index</th>
-                        <th>Hasil Turnitin</th>
-                        <th>Tanggal Cek</th>
-                        <th>Aksi</th>
+                        <th class="d-none d-md-table-cell">Jenis</th>
+                        <th class="d-none d-md-table-cell">Tanggal Ajuan</th>
+                        <th class="text-center">Similarity Index</th>
+                        <th class="text-center">Hasil Turnitin</th>
+                        <th class="d-none d-md-table-cell">Tanggal Cek</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </tfoot>
                 <tbody>
                     @if ($dokumen->count() > 0)
                     @foreach ($dokumen as $d)
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $d->judul }}</td>
-                        <td>{{ $d->jenis_dokumen }}</td>
-                        <td>{{ $d->created_at->format('d-m-Y') }}</td>
+                        <td class="d-none d-md-table-cell">{{ $loop->iteration }}</td>
                         <td>
+                            <div class="font-weight-bold text-dark text-wrap" style="min-width: 130px;">
+                                {{ $d->judul }}
+                            </div>
+                            <!-- Sub-info khusus mobile -->
+                            <div class="d-md-none text-muted small mt-1">
+                                <span class="badge badge-light border text-gray-700">{{ $d->jenis_dokumen }}</span>
+                                <span class="mx-1">|</span>
+                                <i class="far fa-calendar-alt mr-1"></i>{{ $d->created_at->format('d-m-Y') }}
+                            </div>
+                        </td>
+                        <td class="d-none d-md-table-cell">{{ $d->jenis_dokumen }}</td>
+                        <td class="d-none d-md-table-cell">{{ $d->created_at->format('d-m-Y') }}</td>
+                        <td class="text-center">
                             @if($d->hasilTurnitin)
 
                             @php
@@ -74,35 +84,31 @@
 
                                 @endif
                         </td>
-                        <td>
+                        <td class="text-center">
                             @if($d->hasilTurnitin)
                             <a href="{{ route('mahasiswa.dokumen.download', $d->hasilTurnitin->id) }}"
-                                class="btn btn-success btn-sm" download>
-                                Download
+                                class="btn btn-success btn-sm btn-block" download>
+                                <i class="fas fa-download mr-1"></i> Download
                             </a>
                             @else
                             <span class="badge bg-secondary text-white">Belum di cek</span>
                             @endif
                         </td>
-                        <td>
+                        <td class="d-none d-md-table-cell">
                             {{ $d->hasilTurnitin->created_at ?? '-' }}
                         </td>
-                        <td>
-                            <a href="{{ route('mahasiswa.dokumen.show', $d->id) }}" class="btn btn-sm btn-info"
+                        <td class="text-center">
+                            <a href="{{ route('mahasiswa.dokumen.show', $d->id) }}" class="btn btn-sm btn-info btn-circle"
                                 title="Lihat Detail">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            {{-- <a href="{{ route('dokumen.edit', $d->id) }}" class="btn btn-sm btn-warning"
-                                title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </a> --}}
                         </td>
                     </tr>
                     @endforeach
                     @else
                     <tr>
-                        <td colspan="6" class="text-center py-4 text-muted">
-                            <i class="fas fa-inbox"></i> Tidak ada dokumen yang tersedia.
+                        <td colspan="8" class="text-center py-4 text-muted">
+                            <i class="fas fa-inbox fa-2x mb-2 d-block text-gray-300"></i> Tidak ada dokumen yang tersedia.
                         </td>
                     </tr>
                     @endif
