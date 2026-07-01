@@ -26,7 +26,7 @@ class DokumenController extends Controller
         $user = Auth::user();
 
         // start with base query
-        $query = Dokumen::with(['mahasiswa', 'hasilTurnitin.operator']);
+        $query = Dokumen::with(['mahasiswa.programStudi', 'hasilTurnitin.operator']);
 
         // mahasiswa only sees their own dokumen
         if ($user && optional($user->role)->nama_role === 'Mahasiswa') {
@@ -71,7 +71,7 @@ class DokumenController extends Controller
             $query->where('status', $status);
         }
 
-        $dokumen = $query->orderBy('created_at', 'desc')->get();
+        $dokumen = $query->orderBy('created_at', 'asc')->get();
 
         // 5. Statistik Singkat
         $totalAntrean = Dokumen::where('status', 'Pending')->whereNull('assigned_operator_id')->count();
@@ -95,7 +95,7 @@ class DokumenController extends Controller
         $user = Auth::user();
 
         // start with base query
-        $query = Dokumen::with('mahasiswa');
+        $query = Dokumen::with('mahasiswa.programStudi');
 
         // mahasiswa only sees their own dokumen
         if ($user && optional($user->role)->nama_role === 'Mahasiswa') {
@@ -129,7 +129,7 @@ class DokumenController extends Controller
             $query->where('status', $status);
         }
 
-        $dokumen = $query->orderBy('created_at', 'desc')->get();
+        $dokumen = $query->orderBy('created_at', 'asc')->get();
         $programStudis = ProgramStudi::all();
 
         return view('operator.dokumen.riwayat', compact('dokumen', 'programStudis'));
@@ -269,7 +269,7 @@ class DokumenController extends Controller
      */
     public function export(): StreamedResponse
     {
-        $dokumens = Dokumen::with('mahasiswa', 'assignedOperator')->orderBy('created_at', 'desc')->get();
+        $dokumens = Dokumen::with(['mahasiswa.programStudi', 'assignedOperator'])->orderBy('created_at', 'asc')->get();
 
         $headers = [
             "Content-type"        => "text/csv",
@@ -279,7 +279,7 @@ class DokumenController extends Controller
             "Expires"             => "0"
         ];
 
-        $columns = ['No', 'Nama Mahasiswa', 'NIM', 'Judul', 'Jenis Dokumen', 'Status', 'Operator', 'Tanggal Pengajuan'];
+        $columns = ['No', 'Nama Mahasiswa', 'NIM', 'Program Studi', 'No WA', 'Judul', 'Jenis Dokumen', 'Status', 'Operator', 'Tanggal Pengajuan', 'Nominal'];
 
         $callback = function() use($dokumens, $columns) {
             $file = fopen('php://output', 'w');
@@ -290,11 +290,14 @@ class DokumenController extends Controller
                     $index + 1,
                     optional($dokumen->mahasiswa)->nama ?? '-',
                     optional($dokumen->mahasiswa)->nim ?? '-',
+                    optional(optional($dokumen->mahasiswa)->programStudi)->nama_prodi ?? '-',
+                    optional($dokumen->mahasiswa)->whatsapp ?? '-',
                     $dokumen->judul,
                     $dokumen->jenis_dokumen,
                     $dokumen->status,
                     optional($dokumen->assignedOperator)->name ?? '-',
-                    $dokumen->created_at->format('Y-m-d H:i:s'),
+                    $dokumen->created_at->format('d-m-Y H:i'),
+                    10000,
                 ]);
             }
 

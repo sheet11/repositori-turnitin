@@ -71,6 +71,24 @@
         </div>
     @endif
 
+    <style>
+        td.dt-control {
+            cursor: pointer;
+        }
+        td.dt-control .expand-icon {
+            display: inline-block;
+            transition: transform 0.2s ease-in-out;
+        }
+        tr.shown td.dt-control .expand-icon {
+            transform: rotate(90deg);
+        }
+        .detail-table th {
+            width: 180px;
+            font-weight: bold;
+            color: #4e73df;
+        }
+    </style>
+
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Daftar Dokumen</h6>
@@ -130,12 +148,10 @@
                             <th>No</th>
                             <th>Nama</th>
                             <th>NIM</th>
-                            <th>Judul</th>
-                            <th>Jenis</th>
-                            <th>File</th>
-                            <th>Status</th>
+                            <th>Program Studi</th>
+                            <th>No WA</th>
                             <th>Tanggal Pengajuan</th>
-                            <th>Aksi</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -143,29 +159,74 @@
                             <th>No</th>
                             <th>Nama</th>
                             <th>NIM</th>
-                            <th>Judul</th>
-                            <th>Jenis</th>
-                            <th>File</th>
-                            <th>Status</th>
+                            <th>Program Studi</th>
+                            <th>No WA</th>
                             <th>Tanggal Pengajuan</th>
-                            <th>Aksi</th>
+                            <th>Status</th>
                         </tr>
                     </tfoot>
                     <tbody>
                         @if ($dokumen->count() > 0)
                             @foreach ($dokumen as $d)
-                                <tr>
+                                <tr data-judul="{{ $d->judul }}"
+                                    data-jenis="{{ $d->jenis_dokumen }}"
+                                    data-file-url="{{ asset('storage/' . $d->file_asli) }}"
+                                    data-bukti-url="{{ $d->bukti_bayar ? asset('storage/' . $d->bukti_bayar) : '' }}">
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $d->mahasiswa->nama }}</td>
-                                    <td>{{ $d->mahasiswa->nim }}</td>
-                                    <td>{{ $d->judul }}</td>
-                                    <td>{{ $d->jenis_dokumen }}</td>
-                                    <td>
-                                        <a href="{{ asset('storage/' . $d->file_asli) }}" download
-                                            class="btn btn-success btn-sm">
-                                            Download
-                                        </a>
+                                    <td class="dt-control">
+                                        <i class="fas fa-caret-right text-primary expand-icon mr-2"></i>
+                                        <strong>{{ $d->mahasiswa->nama }}</strong>
+
+                                        <!-- Hidden actions container for JavaScript to render inside the child row -->
+                                        <div class="row-actions d-none">
+                                            <a href="{{ route('operator.dokumen.show', $d->id) }}" class="btn btn-sm btn-info mr-1 mb-1"
+                                                title="Lihat Detail">
+                                                <i class="fas fa-eye"></i> Detail
+                                            </a>
+
+                                            @if($d->status == 'Pending' && is_null($d->assigned_operator_id))
+                                                <form action="{{ route('operator.dokumen.claim', $d->id) }}" method="POST" class="d-inline mr-1 mb-1">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm btn-warning" title="Ambil Dokumen Ini Untuk Dikerjakan" onclick="return confirm('Anda yakin ingin mengambil alih pengecekan dokumen ini?')">
+                                                        <i class="fas fa-hand-paper"></i> Kerjakan
+                                                    </button>
+                                                </form>
+                                            @elseif($d->status == 'Diproses' && $d->assigned_operator_id == Auth::id())
+                                                <a href="{{ route('operator.turnitin.create', $d->id) }}"
+                                                    class="btn btn-sm btn-success mr-1 mb-1" title="Upload Hasil Turnitin">
+                                                    <i class="fas fa-upload"></i> Upload Turnitin
+                                                </a>
+                                                {{-- operator can optionally revert to pending --}}
+                                                <form action="{{ route('operator.updateStatus', $d->id) }}" method="POST"
+                                                    class="d-inline mr-1 mb-1">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="status" value="Pending">
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Batalkan Pengerjaan" onclick="return confirm('Apakah Anda yakin ingin melepas kembali dokumen ini ke antrean Pending?')">
+                                                        <i class="fas fa-times"></i> Batal Proses
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
                                     </td>
+                                    <td>{{ $d->mahasiswa->nim }}</td>
+                                    <td>{{ optional($d->mahasiswa->programStudi)->nama_prodi ?? '-' }}</td>
+                                    <td>
+                                        @if ($d->mahasiswa->whatsapp)
+                                            @php
+                                                $waClean = preg_replace('/[^0-9]/', '', $d->mahasiswa->whatsapp);
+                                                if (str_starts_with($waClean, '0')) {
+                                                    $waClean = '62' . substr($waClean, 1);
+                                                }
+                                            @endphp
+                                            <a href="https://wa.me/{{ $waClean }}" target="_blank" class="btn btn-outline-success btn-sm">
+                                                <i class="fab fa-whatsapp"></i> {{ $d->mahasiswa->whatsapp }}
+                                            </a>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $d->created_at->format('d-m-Y H:i') }}</td>
                                     <td>
                                         @if ($d->status == 'Pending')
                                             <span class="badge bg-warning text-dark">{{ $d->status }}</span>
@@ -181,42 +242,11 @@
                                             <span class="badge bg-secondary text-white">{{ $d->status }}</span>
                                         @endif
                                     </td>
-                                    <td>{{ $d->created_at->format('d-m-Y') }}</td>
-                                    <td>
-                                        <a href="{{ route('operator.dokumen.show', $d->id) }}" class="btn btn-sm btn-info"
-                                            title="Lihat Detail">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-
-                                        @if($d->status == 'Pending' && is_null($d->assigned_operator_id))
-                                            <form action="{{ route('operator.dokumen.claim', $d->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-warning" title="Ambil Dokumen Ini Untuk Dikerjakan" onclick="return confirm('Anda yakin ingin mengambil alih pengecekan dokumen ini?')">
-                                                    <i class="fas fa-hand-paper"></i> Kerjakan
-                                                </button>
-                                            </form>
-                                        @elseif($d->status == 'Diproses' && $d->assigned_operator_id == Auth::id())
-                                            <a href="{{ route('operator.turnitin.create', $d->id) }}"
-                                                class="btn btn-sm btn-success" title="Upload Hasil Turnitin">
-                                                <i class="fas fa-upload"></i> Upload Turnitin
-                                            </a>
-                                            {{-- operator can optionally revert to pending --}}
-                                            <form action="{{ route('operator.updateStatus', $d->id) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <input type="hidden" name="status" value="Pending">
-                                                <button type="submit" class="btn btn-sm btn-danger" title="Batalkan Pengerjaan" onclick="return confirm('Apakah Anda yakin ingin melepas kembali dokumen ini ke antrean Pending?')">
-                                                    <i class="fas fa-times"></i> Batal Proses
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </td>
                                 </tr>
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="9" class="text-center py-4 text-muted">
+                                <td colspan="7" class="text-center py-4 text-muted">
                                     <i class="fas fa-inbox"></i> Tidak ada dokumen yang tersedia.
                                 </td>
                             </tr>
@@ -230,11 +260,82 @@
     @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#dokumenTable').DataTable({
+            var table = $('#dokumenTable').DataTable({
                 pageLength: 10,
                 searching: true,
+                order: [[5, 'asc']],
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json'
+                }
+            });
+
+            // Format child row
+            function formatChildRow(tr) {
+                var judul = tr.data('judul');
+                var jenis = tr.data('jenis');
+                var fileUrl = tr.data('file-url');
+                var buktiUrl = tr.data('bukti-url');
+                var tanggal = tr.data('tanggal');
+                var aksiHtml = tr.find('.row-actions').html();
+
+                var buktiHtml = buktiUrl 
+                    ? `<a href="${buktiUrl}" target="_blank" class="btn btn-info btn-sm">
+                           <i class="fas fa-receipt"></i> Lihat Bukti
+                       </a>`
+                    : `<span class="text-muted">-</span>`;
+
+                return `
+                    <div class="p-3 bg-light border rounded">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="font-weight-bold text-primary mb-3"><i class="fas fa-info-circle"></i> Informasi Detail Dokumen</h6>
+                                <table class="table table-sm table-borderless mb-0 detail-table">
+                                    <tbody>
+                                        <tr>
+                                            <th>Judul Dokumen</th>
+                                            <td>: ${judul}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Jenis Dokumen</th>
+                                            <td>: ${jenis}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>File Asli</th>
+                                            <td>: 
+                                                <a href="${fileUrl}" download class="btn btn-success btn-sm py-0">
+                                                    <i class="fas fa-download"></i> Download File
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Bukti Pembayaran</th>
+                                            <td>: ${buktiHtml}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-4 border-left">
+                                <h6 class="font-weight-bold text-primary mb-3"><i class="fas fa-cog"></i> Aksi Cepat</h6>
+                                <div class="d-flex flex-wrap align-items-center">
+                                    ${aksiHtml}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Click event handler for expanding/collapsing child rows
+            $('#dokumenTable tbody').on('click', 'td.dt-control', function() {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    row.child(formatChildRow(tr)).show();
+                    tr.addClass('shown');
                 }
             });
         });
