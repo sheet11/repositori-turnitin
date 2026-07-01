@@ -85,6 +85,15 @@
                                 value="{{ request('search') }}">
                         </div>
 
+                        <div class="col-md-3">
+                            <select name="prodi" class="form-control">
+                                <option value="">-- Program Studi --</option>
+                                @foreach ($programStudis as $ps)
+                                    <option value="{{ $ps->id }}" {{ request('prodi') == $ps->id ? 'selected' : '' }}>{{ $ps->nama_prodi }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="col-md-2">
                             <select name="tahun" class="form-control">
                                 <option value="">-- Tahun --</option>
@@ -105,7 +114,7 @@
                         </div>
 
                         <div class="col-md-2">
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary mr-1">
                                 <i class="fas fa-search"></i> Cari
                             </button>
                             <a href="{{ route('operator.dokumen.index') }}" class="btn btn-secondary">

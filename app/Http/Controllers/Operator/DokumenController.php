@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Operator;
 
 use Illuminate\Http\Request;
 use App\Models\Dokumen;
+use App\Models\ProgramStudi;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ class DokumenController extends Controller
         $search = $request->search;
         $tahun = $request->tahun;
         $status = $request->status;
+        $prodi = $request->prodi;
         
         $user = Auth::user();
 
@@ -46,6 +48,12 @@ class DokumenController extends Controller
             $query->whereYear('created_at', $tahun);
         }
 
+        if ($prodi) {
+            $query->whereHas('mahasiswa', function ($mq) use ($prodi) {
+                $mq->where('program_studi_id', $prodi);
+            });
+        }
+
         // Operater sees: 
         // 1. Pending documents that are NOT claimed yet (assigned_operator_id is null)
         // 2. Diproses documents that are claimed by THEM (assigned_operator_id == Auth::id())
@@ -69,8 +77,9 @@ class DokumenController extends Controller
         $totalAntrean = Dokumen::where('status', 'Pending')->whereNull('assigned_operator_id')->count();
         $sedangDikerjakan = Dokumen::where('status', 'Diproses')->where('assigned_operator_id', $user->id)->count();
         $selesaiHariIni = Dokumen::where('status', 'Selesai')->whereDate('updated_at', today())->count();
+        $programStudis = ProgramStudi::all();
 
-        return view('operator.dokumen.dashboard', compact('dokumen', 'totalAntrean', 'sedangDikerjakan', 'selesaiHariIni'));
+        return view('operator.dokumen.dashboard', compact('dokumen', 'totalAntrean', 'sedangDikerjakan', 'selesaiHariIni', 'programStudis'));
     }
 
     /**
@@ -81,6 +90,7 @@ class DokumenController extends Controller
         $search = $request->search;
         $tahun = $request->tahun;
         $status = $request->status;
+        $prodi = $request->prodi;
         
         $user = Auth::user();
 
@@ -107,6 +117,12 @@ class DokumenController extends Controller
             $query->whereYear('created_at', $tahun);
         }
 
+        if ($prodi) {
+            $query->whereHas('mahasiswa', function ($mq) use ($prodi) {
+                $mq->where('program_studi_id', $prodi);
+            });
+        }
+
         $query->whereIn('status', ['Selesai', 'Ditolak', 'Sudah Dicek']);
 
         if ($status) {
@@ -114,8 +130,9 @@ class DokumenController extends Controller
         }
 
         $dokumen = $query->orderBy('created_at', 'desc')->get();
+        $programStudis = ProgramStudi::all();
 
-        return view('operator.dokumen.riwayat', compact('dokumen'));
+        return view('operator.dokumen.riwayat', compact('dokumen', 'programStudis'));
     }
 
     /**

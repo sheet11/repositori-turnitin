@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\Dokumen;
 use App\Models\HasilTurnitin;
+use App\Models\ProgramStudi;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,7 @@ class DokumenController extends Controller
         $search = $request->query('search');
         $tahun = $request->query('tahun');
         $status = $request->query('status');
+        $prodi = $request->query('prodi');
 
         $user = Auth::user();
 
@@ -50,10 +52,17 @@ class DokumenController extends Controller
             $query->where('status', $status);
         }
 
+        if ($prodi) {
+            $query->whereHas('mahasiswa', function ($mq) use ($prodi) {
+                $mq->where('program_studi_id', $prodi);
+            });
+        }
+
         // you can change to paginate() if you need pagination in the view
         $dokumen = $query->orderBy('created_at', 'desc')->get();
+        $programStudis = ProgramStudi::all();
 
-        return view('admin.dokumen.dashboard', compact('dokumen'));
+        return view('admin.dokumen.dashboard', compact('dokumen', 'programStudis'));
     }
 
     /**
