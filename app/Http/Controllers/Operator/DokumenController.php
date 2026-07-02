@@ -95,7 +95,7 @@ class DokumenController extends Controller
         $user = Auth::user();
 
         // start with base query
-        $query = Dokumen::with('mahasiswa.programStudi');
+        $query = Dokumen::with(['mahasiswa.programStudi', 'hasilTurnitin']);
 
         // mahasiswa only sees their own dokumen
         if ($user && optional($user->role)->nama_role === 'Mahasiswa') {

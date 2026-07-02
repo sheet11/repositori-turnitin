@@ -95,8 +95,8 @@
                             <th>Nama</th>
                             <th>NIM</th>
                             <th>Program Studi</th>
-                            <th>No WA</th>
                             <th>Tanggal Pengajuan</th>
+                            <th>Tanggal Cek</th>
                             <th>Status & Riwayat</th>
                         </tr>
                     </thead>
@@ -106,8 +106,8 @@
                             <th>Nama</th>
                             <th>NIM</th>
                             <th>Program Studi</th>
-                            <th>No WA</th>
                             <th>Tanggal Pengajuan</th>
+                            <th>Tanggal Cek</th>
                             <th>Status & Riwayat</th>
                         </tr>
                     </tfoot>
@@ -117,7 +117,9 @@
                                 <tr data-judul="{{ $d->judul }}"
                                     data-jenis="{{ $d->jenis_dokumen }}"
                                     data-file-url="{{ asset('storage/' . $d->file_asli) }}"
-                                    data-bukti-url="{{ $d->bukti_bayar ? asset('storage/' . $d->bukti_bayar) : '' }}">
+                                    data-bukti-url="{{ $d->bukti_bayar ? asset('storage/' . $d->bukti_bayar) : '' }}"
+                                    data-wa-number="{{ $d->mahasiswa->whatsapp ?? '' }}"
+                                    data-wa-link="@if($d->mahasiswa->whatsapp)@php $waClean = preg_replace('/[^0-9]/', '', $d->mahasiswa->whatsapp); if (str_starts_with($waClean, '0')) { $waClean = '62' . substr($waClean, 1); } @endphp{{ $waClean }}@endif">
                                     <td>{{ $loop->iteration }}</td>
                                     <td class="dt-control">
                                         <i class="fas fa-caret-right text-primary expand-icon mr-2"></i>
@@ -159,22 +161,14 @@
                                     </td>
                                     <td>{{ $d->mahasiswa->nim }}</td>
                                     <td>{{ optional($d->mahasiswa->programStudi)->nama_prodi ?? '-' }}</td>
+                                    <td>{{ $d->created_at->format('d-m-Y H:i') }}</td>
                                     <td>
-                                        @if ($d->mahasiswa->whatsapp)
-                                            @php
-                                                $waClean = preg_replace('/[^0-9]/', '', $d->mahasiswa->whatsapp);
-                                                if (str_starts_with($waClean, '0')) {
-                                                    $waClean = '62' . substr($waClean, 1);
-                                                }
-                                            @endphp
-                                            <a href="https://wa.me/{{ $waClean }}" target="_blank" class="btn btn-outline-success btn-sm">
-                                                <i class="fab fa-whatsapp"></i> {{ $d->mahasiswa->whatsapp }}
-                                            </a>
+                                        @if($d->hasilTurnitin && $d->hasilTurnitin->tanggal_cek)
+                                            {{ $d->hasilTurnitin->tanggal_cek->format('d-m-Y H:i') }}
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
-                                    <td>{{ $d->created_at->format('d-m-Y H:i') }}</td>
                                     <td>
                                         @if ($d->status == 'Pending')
                                             <span class="badge bg-warning text-dark mb-1">{{ $d->status }}</span>
@@ -234,11 +228,19 @@
                 var jenis = tr.data('jenis');
                 var fileUrl = tr.data('file-url');
                 var buktiUrl = tr.data('bukti-url');
+                var waNumber = tr.data('wa-number');
+                var waLink = tr.data('wa-link');
                 var aksiHtml = tr.find('.row-actions').html();
 
                 var buktiHtml = buktiUrl 
                     ? `<a href="${buktiUrl}" target="_blank" class="btn btn-info btn-sm">
                            <i class="fas fa-receipt"></i> Lihat Bukti
+                       </a>`
+                    : `<span class="text-muted">-</span>`;
+
+                var waHtml = waNumber
+                    ? `<a href="https://wa.me/${waLink}" target="_blank" class="btn btn-outline-success btn-sm">
+                           <i class="fab fa-whatsapp"></i> ${waNumber}
                        </a>`
                     : `<span class="text-muted">-</span>`;
 
@@ -268,6 +270,10 @@
                                         <tr>
                                             <th>Bukti Pembayaran</th>
                                             <td>: ${buktiHtml}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>No. WhatsApp</th>
+                                            <td>: ${waHtml}</td>
                                         </tr>
                                     </tbody>
                                 </table>
