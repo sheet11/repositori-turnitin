@@ -59,7 +59,7 @@ class DokumenController extends Controller
             'judul' => 'required|string|max:255',
             'jenis_dokumen' => 'required|in:Skripsi,Jurnal,Proposal,KTI',
             'nim' => 'required|string|max:50',
-            'file_asli' => 'required|file|mimes:pdf,doc,docx|max:25600',
+            'file_asli' => 'required|file|mimes:pdf|max:25600',
             'bukti_bayar' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
@@ -146,7 +146,7 @@ class DokumenController extends Controller
         $data = $request->validate([
             'judul' => 'required|string|max:255',
             'jenis_dokumen' => 'required|in:Skripsi,Jurnal,Proposal,KTI',
-            'file_asli' => 'nullable|file|mimes:pdf,doc,docx|max:25600',
+            'file_asli' => 'nullable|file|mimes:pdf|max:25600',
             'bukti_bayar' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 

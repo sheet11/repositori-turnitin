@@ -85,11 +85,11 @@
                     <div class="mb-3">
                         <label for="file_asli" class="form-label">File Asli (PDF) <span class="text-danger">*</span></label>
                         <input type="file" class="form-control @error('file_asli') is-invalid @enderror" id="file_asli"
-                            name="file_asli" accept=".pdf,.doc,.docx" required>
+                            name="file_asli" accept=".pdf" required>
                         @error('file_asli')
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
-                        <small class="form-text text-muted">Format yang diterima: PDF, DOC, DOCX. Ukuran maksimal:
+                        <small class="form-text text-muted">Format yang diterima: PDF. Ukuran maksimal:
                             25MB</small>
                     </div>
 
