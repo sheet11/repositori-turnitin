@@ -76,7 +76,7 @@ class DokumenController extends Controller
         // 5. Statistik Singkat
         $totalAntrean = Dokumen::where('status', 'Pending')->whereNull('assigned_operator_id')->count();
         $sedangDikerjakan = Dokumen::where('status', 'Diproses')->where('assigned_operator_id', $user->id)->count();
-        $selesaiHariIni = Dokumen::where('status', 'Selesai')->whereDate('updated_at', today())->count();
+        $selesaiHariIni = Dokumen::where('status', 'Selesai', 'Sudah Dicek')->whereDate('updated_at', today())->count();
         $programStudis = ProgramStudi::all();
 
         return view('operator.dokumen.dashboard', compact('dokumen', 'totalAntrean', 'sedangDikerjakan', 'selesaiHariIni', 'programStudis'));
