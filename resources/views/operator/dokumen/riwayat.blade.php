@@ -216,7 +216,7 @@
             var table = $('#dokumenTable').DataTable({
                 pageLength: 10,
                 searching: true,
-                order: [[5, 'asc']],
+                order: [[5, 'desc']],
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json'
                 }
