@@ -41,14 +41,14 @@
         </div>
         
         <!-- Hapus Akun -->
-        <div class="card shadow mb-4 border-left-danger">
+        {{-- <div class="card shadow mb-4 border-left-danger">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-danger">Hapus Akun</h6>
             </div>
             <div class="card-body">
                 @include('profile.partials.delete-user-form')
             </div>
-        </div>
+        </div> --}}
     </div>
 
 </div>
