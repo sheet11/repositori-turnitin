@@ -183,7 +183,25 @@
                                         @else
                                             <span class="badge bg-secondary text-white mb-1">{{ $d->status }}</span>
                                         @endif
-                                        
+
+                                        @if($d->hasilTurnitin && $d->hasilTurnitin->similarity_index !== null)
+                                            @php
+                                                $sim = $d->hasilTurnitin->similarity_index;
+                                                if ($sim > 40) {
+                                                    $simColor = 'danger';
+                                                } elseif ($sim > 20) {
+                                                    $simColor = 'warning';
+                                                } else {
+                                                    $simColor = 'success';
+                                                }
+                                            @endphp
+                                            <div class="small mt-1">
+                                                <i class="fas fa-percentage fa-xs"></i>
+                                                <b>Similarity:</b>
+                                                <span class="badge bg-{{ $simColor }} text-white">{{ $sim }}%</span>
+                                            </div>
+                                        @endif
+
                                         @if($d->hasilTurnitin && in_array($d->status, ['Sudah Dicek', 'Selesai']))
                                             <div class="small mt-1 text-muted">
                                                 <i class="fas fa-upload fa-xs"></i> <b>Uploaded by:</b> {{ optional($d->hasilTurnitin->operator)->name ?? 'System' }}<br>
