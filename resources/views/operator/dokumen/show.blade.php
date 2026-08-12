@@ -103,10 +103,21 @@
                                 {{ $dokumen->hasilTurnitin->tanggal_cek->format('d-m-Y H:i:s') }}
                             </p>
                             @if ($dokumen->hasilTurnitin->file_laporan)
-                                <p>
+                                <p class="mb-0">
                                     <a href="{{ Storage::url($dokumen->hasilTurnitin->file_laporan) }}" target="_blank"
-                                        class="btn btn-sm btn-primary">
+                                        class="btn btn-sm btn-primary mr-1">
                                         <i class="fas fa-file-pdf"></i> Lihat Laporan Turnitin
+                                    </a>
+                                    <a href="{{ route('operator.turnitin.edit', $dokumen->hasilTurnitin->id) }}"
+                                        class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Ubah Hasil Turnitin
+                                    </a>
+                                </p>
+                            @else
+                                <p class="mb-0">
+                                    <a href="{{ route('operator.turnitin.edit', $dokumen->hasilTurnitin->id) }}"
+                                        class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Ubah Hasil Turnitin
                                     </a>
                                 </p>
                             @endif

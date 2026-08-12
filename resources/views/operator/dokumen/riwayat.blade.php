@@ -131,6 +131,12 @@
                                                 title="Lihat Detail">
                                                 <i class="fas fa-eye"></i> Detail
                                             </a>
+                                            @if($d->hasilTurnitin)
+                                                <a href="{{ route('operator.turnitin.edit', $d->hasilTurnitin->id) }}" class="btn btn-sm btn-warning mr-1 mb-1"
+                                                    title="Ubah Hasil Turnitin">
+                                                    <i class="fas fa-edit"></i> Edit Turnitin
+                                                </a>
+                                            @endif
                                             {{-- allow operator to change status quickly --}}
                                             <form action="{{ route('operator.updateStatus', $d->id) }}" method="POST"
                                                 class="d-inline mr-1 mb-1">

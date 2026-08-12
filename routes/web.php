@@ -120,6 +120,8 @@ Route::middleware(['auth'])->prefix('operator')->group(function () {
     Route::get('/dokumen/download/{id}', [OperatorDokumenController::class, 'download'])->name('operator.dokumen.download');
     Route::get('/turnitin/create/{id}',[HasilTurnitinController::class,'create'])->name('operator.turnitin.create');
     Route::post('/turnitin',[HasilTurnitinController::class,'store'])->name('operator.turnitin.store');
+    Route::get('/turnitin/{id}/edit', [HasilTurnitinController::class, 'edit'])->name('operator.turnitin.edit');
+    Route::put('/turnitin/{id}', [HasilTurnitinController::class, 'update'])->name('operator.turnitin.update');
     Route::get('/turnitin/download/{id}',[HasilTurnitinController::class, 'download'])->name('operator.turnitin.download');
 });
 
