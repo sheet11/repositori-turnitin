@@ -80,11 +80,6 @@
                                     </form>
 
                                     <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="{{ route('register') }}">
-                                            Create an Account!
-                                        </a>
-                                    </div>
                                     @if (Route::has('password.request'))
                                     <div class="text-center">
                                         <a class="small" href="{{ route('password.request') }}">
