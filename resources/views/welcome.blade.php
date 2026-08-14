@@ -350,11 +350,6 @@
                             <a href="{{ route('login') }}" class="btn btn-outline-primary btn-custom">
                                 Login
                             </a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn btn-primary btn-custom shadow-sm">
-                                    Daftar Akun
-                                </a>
-                            @endif
                         @endauth
                     @endif
                 </div>
