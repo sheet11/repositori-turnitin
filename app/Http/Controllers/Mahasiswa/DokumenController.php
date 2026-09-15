@@ -73,7 +73,7 @@ class DokumenController extends Controller
                 // Sanitize parameters for safe filename
                 $nama = preg_replace('/[^A-Za-z0-9\-]/', '_', $mahasiswa->nama);
                 $prodi = preg_replace('/[^A-Za-z0-9\-]/', '_', optional($mahasiswa->programStudi)->nama_prodi ?? 'Prodi');
-                $tanggal = date('Y-m-d');
+                $tanggal = date('Y-m-d_H-i-s');
                 
                 $filename = "{$mahasiswa->nim}_{$nama}_{$prodi}_{$tanggal}.{$extension}";
                 $data['file_asli'] = $file->storeAs('dokumen', $filename, 'public');
@@ -164,7 +164,7 @@ class DokumenController extends Controller
             if ($mahasiswa) {
                 $nama = preg_replace('/[^A-Za-z0-9\-]/', '_', $mahasiswa->nama);
                 $prodi = preg_replace('/[^A-Za-z0-9\-]/', '_', optional($mahasiswa->programStudi)->nama_prodi ?? 'Prodi');
-                $tanggal = date('Y-m-d');
+                $tanggal = date('Y-m-d_H-i-s');
                 
                 $filename = "{$mahasiswa->nim}_{$nama}_{$prodi}_{$tanggal}.{$extension}";
                 $data['file_asli'] = $file->storeAs('dokumen', $filename, 'public');
