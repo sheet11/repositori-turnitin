@@ -7,6 +7,7 @@ use App\Models\Dokumen;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Models\HasilTurnitin;
 
@@ -74,8 +75,9 @@ class DokumenController extends Controller
                 $nama = preg_replace('/[^A-Za-z0-9\-]/', '_', $mahasiswa->nama);
                 $prodi = preg_replace('/[^A-Za-z0-9\-]/', '_', optional($mahasiswa->programStudi)->nama_prodi ?? 'Prodi');
                 $tanggal = date('Y-m-d_H-i-s');
+                $kodeUnik = Str::uuid();
                 
-                $filename = "{$mahasiswa->nim}_{$nama}_{$prodi}_{$tanggal}.{$extension}";
+                $filename = "{$mahasiswa->nim}_{$nama}_{$prodi}_{$tanggal}_{$kodeUnik}.{$extension}";
                 $data['file_asli'] = $file->storeAs('dokumen', $filename, 'public');
             } else {
                 // fallback
@@ -165,8 +167,9 @@ class DokumenController extends Controller
                 $nama = preg_replace('/[^A-Za-z0-9\-]/', '_', $mahasiswa->nama);
                 $prodi = preg_replace('/[^A-Za-z0-9\-]/', '_', optional($mahasiswa->programStudi)->nama_prodi ?? 'Prodi');
                 $tanggal = date('Y-m-d_H-i-s');
+                $kodeUnik = Str::uuid();
                 
-                $filename = "{$mahasiswa->nim}_{$nama}_{$prodi}_{$tanggal}.{$extension}";
+                $filename = "{$mahasiswa->nim}_{$nama}_{$prodi}_{$tanggal}_{$kodeUnik}.{$extension}";
                 $data['file_asli'] = $file->storeAs('dokumen', $filename, 'public');
             } else {
                 $data['file_asli'] = $file->store('dokumen', 'public');
